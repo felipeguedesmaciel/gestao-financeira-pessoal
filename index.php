@@ -34,7 +34,58 @@
                     <div class="item-categoria">
                         <p>Mercado</p><p>R$0.00</p>
                     </div>
+                    <div class="item-categoria">
+                        <p>Internet</p><p>R$0.00</p>
+                    </div>
+                    <div class="item-categoria">
+                        <p>Outros</p><p>R$0.00</p>
+                    </div>
+                    <div class="item-categoria">
+                        <p>Viagens</p><p>R$0.00</p>
+                    </div>
                 </div>
+            </div>
+            <div>
+                <h3>Próximos Vencimento</h3>
+                <table style="border: solid 1px black;">
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>Carro</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="butao">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
             </div>
         </section>
         <section>
