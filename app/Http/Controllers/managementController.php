@@ -9,7 +9,7 @@ use App\Models\Management;
 class ManagementController extends Controller
 {
     public function index(){
-
+        
         return view('welcome');
     }
 
