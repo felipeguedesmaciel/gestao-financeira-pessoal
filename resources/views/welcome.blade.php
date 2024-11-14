@@ -6,6 +6,7 @@
 <div class="login">
     <h1>Entre:</h1>
     <form action="/" method="POST" enctype="multipart/form-data">
+        @csrf
         <div class="form-group">
             <label for="login">Login:</label>
             <input type="text" name="login" id="login" placeholder="Login">
