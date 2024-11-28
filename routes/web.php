@@ -5,8 +5,6 @@ use App\Http\Controllers\ManagementController;
 
 Route::get('/', [ManagementController::class, 'index']);
 
-Route::get('/painel', [ManagementController::class, 'panel']);
-
 Route::get('/menu-test', function () {
     return view('menu-test');
 });
@@ -15,7 +13,5 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [ManagementController::class, 'panel'] )->name('dashboard');
 });

@@ -14,6 +14,8 @@ class ManagementController extends Controller
     }
 
     public function panel(){
-        return view('management.painel');
+        return view('dashboard');
     }
+
+
 }
