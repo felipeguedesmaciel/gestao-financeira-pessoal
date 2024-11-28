@@ -1,0 +1,28 @@
+@charset "UTF-8";
+menu{
+    background-color: rgba(130, 70, 209, 1);;
+}
+menu > ul{
+    list-style-type: none;
+    padding: 0 20px 0 20px;
+
+}
+
+menu a{
+    text-decoration: none;
+}
+menu#itens{
+    display: none;
+    position: absolute;
+}
+
+#burguer{
+    width: 33px;
+    height: 33px;
+    float: left;
+    cursor: pointer;
+}
+
+#burguer:hover{
+    background-color: rgba(130, 70, 209, 1);
+}

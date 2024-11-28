@@ -9,15 +9,35 @@
 
     <!-- CSS da Aplicação -->
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/medias.css">
+
+    <!-- JS da Aplicação -->
+    <script src="js/management.js"></script>
     <title>@yield('title')</title>
 </head>
 <body>
     <header>
+        <ion-icon onclick="clickMenu()" id="burguer" name="reorder-three-sharp"></ion-icon>
         <h1>Gestão Financeira Pessoal</h1>
         <p>Previsão: <button>on/off</button></p>
-        <nav>
-
-        </nav>
+        <menu id="itens">
+            <ul>
+                <li><a href="#">Opção 1</a></li>
+                <li><a href="#">Opção 2</a></li>
+                @auth
+                <li>
+                    <form action="/logout" method="POST">
+                        @csrf
+                        <a href="/logout"
+                            onclick="event.preventDefault();
+                            this.closest('form').submit();"
+                        >
+                        Sair<ion-icon name="log-out-outline"></ion-icon> </a>
+                    </form>
+                </li>
+                @endauth
+            </ul>
+        </menu>
     </header>
     <main>
         @yield('content')
@@ -25,5 +45,6 @@
     <footer>
         <p>Desenvolvido por <a href="#">Felipe Maciel</a>&copy;</p>
     </footer>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </body>
 </html>
