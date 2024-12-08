@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Management;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ManagementController extends Controller
 {
@@ -15,8 +15,8 @@ class ManagementController extends Controller
     }
 
     public function panel(){
-        $users = User::all();
-        return view('dashboard', ['users'=> $users]);
+
+        return view('dashboard', ['user'=> Auth::user()]);
     }
 
 
