@@ -3,6 +3,11 @@
 @section('title', 'Gestão Financeira')
 
 @section('content')
+@foreach ($users as $user)
+ 
+<p>{{ $user->name }}</p>
+
+@endforeach
     <section>
         <h2>Saldo total: R$0.000,00</h2>
     </section>
