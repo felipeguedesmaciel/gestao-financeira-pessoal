@@ -1,8 +1,9 @@
 @charset "UTF-8";
 :root{
-    --font: Arial, Helvetica, sans-serif;
+    --font: Arimo, Helvetica, sans-serif;
     --cor-principal:rgba(130, 10, 209, 1);
 }
+
 *{
     margin: 0px;
     padding: 0px;
@@ -11,14 +12,66 @@
 
 body{
     background-color: white;
+    background: var(--cor-principal);
 }
 header{
     height: 100px;
     background-color: var(--cor-principal);
     color: white;
     text-align: center;
+    padding: 20px;
 }
 header > h1{
     font-size: 20px;
-    padding-top: 20px;
+    font-weight: bold;
+    padding: 5px;
+}
+#form-index{
+    display: grid;
+    place-items: center;
+    /* height: 90vh; */
+    color: white;
+    margin-top: 45px;
+}
+#form-index > form{
+    max-width: 185px;
+    background-color: #450e69ed;
+    border: 1px solid #450e69;
+    padding: 11px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.1);
+}
+#form-index > form input{
+    width: 163px;
+    height: 34px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.25);
+    margin-bottom: 11px;
+}
+#form-index > form input[type="checkbox"]{
+    width: 15px;
+    height: 15px;
+}
+#help-register{
+    text-align: center;
+    font-size: 10px;
+    padding-bottom: 15px;
+    margin-top: 22px;
+}
+#link-register{ text-decoration: none; color: white; font-size: 13px; }
+
+#initial-title{
+    padding-top: 58px;
+}
+
+section{
+    border-bottom: 1px solid;
+    background-color: white;
+    padding: 25px
+}
+
+footer{
+    text-align: center;
+    color: white;
 }

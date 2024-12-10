@@ -10,6 +10,8 @@
     <!-- CSS da Aplicação -->
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/medias.css">
+    <!-- Font do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
     <!-- JS da Aplicação -->
     <script src="js/management.js"></script>
@@ -17,6 +19,10 @@
 </head>
 <body>
     <header>
+        @guest
+        <h1 id="initial-title">Gestão Financeira Pessoal</h1>
+        @endguest
+        @auth
         <ion-icon onclick="clickMenu()" id="burguer" name="reorder-three-sharp"></ion-icon>
         <h1>Gestão Financeira Pessoal</h1>
         <p>Previsão: <button>on/off</button></p>
@@ -24,7 +30,6 @@
             <ul>
                 <li><a href="#">Opção 1</a></li>
                 <li><a href="#">Opção 2</a></li>
-                @auth
                 <li>
                     <form action="/logout" method="POST">
                         @csrf
@@ -35,9 +40,9 @@
                         Sair<ion-icon name="log-out-outline"></ion-icon> </a>
                     </form>
                 </li>
-                @endauth
             </ul>
         </menu>
+        @endauth
     </header>
     <main>
         @yield('content')

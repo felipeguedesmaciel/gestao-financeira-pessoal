@@ -4,7 +4,7 @@
 
 @section('content')
 @if (isset($user))
-        <p>Olá, {{ $user->name }}.</p>
+        <p style="color: white; padding-left:20px;">Olá, {{ $user->name }}.</p>
 @endif
     <section>
         <h2>Saldo total: R$0.000,00</h2>
