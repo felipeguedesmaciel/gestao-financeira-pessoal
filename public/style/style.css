@@ -9,7 +9,12 @@
     padding: 0px;
     font-family: var(--font);
 }
-
+h2{
+    font-size: 20px;
+}
+h3{
+    font-size: 17px;
+}
 body{
     background-color: white;
     background: var(--cor-principal);
@@ -62,7 +67,26 @@ header > h1{
 #link-register{ text-decoration: none; color: white; font-size: 13px; }
 
 #initial-title{
-    padding-top: 58px;
+    padding-top: 45px;
+}
+
+#card-category{
+    text-align: center;
+    color: white;
+    min-width: 90px;
+    padding: 10px 0 0 0;
+}
+.bg-main{
+    background-color: var(--cor-principal);
+}
+
+.list-dasboard{
+    padding: 0;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    gap: 45px;
+    justify-content: center;
 }
 
 section{

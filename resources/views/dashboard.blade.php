@@ -11,31 +11,59 @@
     </section>
     <section>
         <h2>Este Mês</h2>
-        <div>Entradas<p>R$0.00</p></div>
-        <div>Saídas<p>R$0.00</p></div>
-        <div>Saldo<p>R$0.00</p></div>
+        <ul class="list-dasboard">
+            <li>Entradas <p>R$0.00</p></li>
+            <li>Saídas <p>R$0.00</p></li>
+            <li>Saldo <p>R$0.00</p></li>
+        </ul>
         <div>
             <h3>Categorias Inseridas</h3>
-            <div class="categorias">
-                <div class="item-categoria">
-                    <p>Casa</p><p>R$0.00</p>
+                <div class="container my-5">
+                    <div class="row g-3">
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Casa</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Carro</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Mercado</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Internet</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Outros</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Viagens</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="item-categoria">
-                    <p>Carro</p><p>R$0.00</p>
-                </div>
-                <div class="item-categoria">
-                    <p>Mercado</p><p>R$0.00</p>
-                </div>
-                <div class="item-categoria">
-                    <p>Internet</p><p>R$0.00</p>
-                </div>
-                <div class="item-categoria">
-                    <p>Outros</p><p>R$0.00</p>
-                </div>
-                <div class="item-categoria">
-                    <p>Viagens</p><p>R$0.00</p>
-                </div>
-            </div>
         </div>
         <div>
             <h3>Próximos Vencimento</h3>
