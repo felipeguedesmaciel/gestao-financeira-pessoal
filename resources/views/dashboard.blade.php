@@ -67,45 +67,76 @@
         </div>
         <div>
             <h3>Próximos Vencimento</h3>
-            <table style="border: solid 1px black;">
+            <form action="#" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Categoria</th>
                         <th>Vencimento</th>
                         <th>Valor</th>
+                        <th>Pago</th>
                     </tr>
                 </thead>
                 <tr>
                     <td>Carro</td>
                     <td>10/02/2024</td>
                     <td>R$0.00</td>
-                    <td>Pago</td>
+                    <td>
+                        <div class="btn-checkbox">
+                            <input type="checkbox" name="pago" id="pago" >
+                            <label for="pago"></label>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Casa</td>
                     <td>10/02/2024</td>
                     <td>R$0.00</td>
-                    <td>Pago</td>
+                    <td>
+                        <div class="btn-checkbox">
+                            <input type="checkbox" name="pago" id="pago" >
+                            <label for="pago"></label>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Mercado</td>
                     <td>10/02/2024</td>
                     <td>R$0.00</td>
-                    <td>Não Pago</td>
+                    <td>
+                        <div class="btn-checkbox">
+                            <input type="checkbox" name="pago" id="pago" >
+                            <label for="pago"></label>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Outros</td>
                     <td>10/02/2024</td>
                     <td>R$0.00</td>
-                    <td>Não Pago</td>
+                    <td>
+                        <div class="btn-checkbox">
+                            <input type="checkbox" name="pago" id="pago" >
+                            <label for="pago"></label>
+                        </div>
+                    </td>
                 </tr>
-                <tr class="butao">
+                <tr>
                     <td>Internet</td>
                     <td>10/02/2024</td>
                     <td>R$0.00</td>
-                    <td>Não Pago</td>
+                    <td>
+                        <div class="btn-checkbox">
+                            <input type="checkbox" name="pago" id="pago" >
+                            <label for="pago"></label>
+                        </div>
+                    </td>
                 </tr>
             </table>
+            <input type="submit" class="btn btn-primary"  value="Editar Evento">
+            </form>
         </div>
     </section>
     <section>

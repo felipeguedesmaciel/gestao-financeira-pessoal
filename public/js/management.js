@@ -11,4 +11,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Torne a função disponível globalmente para o evento onclick
     window.clickMenu = clickMenu;
 });
-

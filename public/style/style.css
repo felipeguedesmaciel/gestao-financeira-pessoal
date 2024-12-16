@@ -76,6 +76,30 @@ header > h1{
     min-width: 90px;
     padding: 10px 0 0 0;
 }
+
+/* Estilo do botão */
+.btn-checkbox input[type="checkbox"]::before {
+    appearance: none;
+    content:"NÃO";
+    display: inline-block;
+    width: 50px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: white;
+    background-color: red;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    user-select: none;
+}
+
+/* Estado ON do botão */
+.btn-checkbox input[type="checkbox"]:checked::before{
+    background-color: green;
+    color: white;
+    content: "SIM";
+}
+
 .bg-main{
     background-color: var(--cor-principal);
 }

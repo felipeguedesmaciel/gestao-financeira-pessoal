@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
     <!-- JS da Aplicação -->
-    <script src="js/management.js"></script>
+    <script src="js/management.js" defer></script>
     <title>@yield('title')</title>
 </head>
 <body>
