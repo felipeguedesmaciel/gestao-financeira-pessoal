@@ -1,28 +1,37 @@
 @charset "UTF-8";
 menu{
-    background-color: rgba(130, 70, 209, 1);;
+    background-color: rgba(130, 70, 209, 1);
 }
 menu > ul{
     list-style-type: none;
     padding: 0 20px 0 20px;
-
+    text-align: left;
 }
 
 menu a{
     text-decoration: none;
+    color: white;
 }
 menu#itens{
     display: none;
     position: absolute;
+    padding-top: 20px;
+    top: 0;
+    left: 0;
 }
 
 #burguer{
-    width: 33px;
-    height: 33px;
+    font-size: 35px;
     float: left;
     cursor: pointer;
 }
 
 #burguer:hover{
     background-color: rgba(130, 70, 209, 1);
+}
+
+#close{
+    font-size: 35px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }

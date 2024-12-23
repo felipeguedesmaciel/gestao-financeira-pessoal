@@ -83,7 +83,7 @@
                     <td>Carro</td>
                     <td>10/02/2024</td>
                     <td>R$0.00</td>
-                    <td>
+                    <td class="col-table">
                         <div class="btn-checkbox">
                             <input type="checkbox" name="pago" id="pago" >
                             <label for="pago"></label>
@@ -135,48 +135,102 @@
                     </td>
                 </tr>
             </table>
-            <input type="submit" class="btn btn-primary"  value="Editar Evento">
+                <div class="btn-list-sv">
+                    <a href="#" class="btn btn-outline-primary">Editar direto na lista <img src="img/write.png" alt=""></a>
+                    <button class="btn btn-primary btn-line" type="submit"><span>Salvar</span><ion-icon id="icon-btn" class="ms-2" name="checkbox"></ion-icon></button>
+                </div>
             </form>
         </div>
     </section>
     <section>
         <h2>Próximo Mês:</h2>
-        <div>Entradas<p>R$0.00</p></div>
-        <div>Saídas<p>R$0.00</p></div>
-        <div>Saldo<p>R$0.00</p></div>
+        <ul class="list-dasboard">
+            <li>Entradas <p>R$0.00</p></li>
+            <li>Saídas <p>R$0.00</p></li>
+            <li>Saldo <p>R$0.00</p></li>
+        </ul>
         <div>
             <h3>Categorias Inseridas</h3>
-            <div class="categorias">
-                <div class="item-categoria">
-                    <p>Casa</p><p>R$0.00</p>
+                <div class="container my-5">
+                    <div class="row g-3">
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Casa</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Carro</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Mercado</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Internet</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Outros</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>Viagens</p><p>R$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="item-categoria">
-                    <p>Carro</p><p>R$0.00</p>
-                </div>
-                <div class="item-categoria">
-                    <p>Mercado</p><p>R$0.00</p>
-                </div>
-            </div>
         </div>
     </section>
     <section>
         <h2>Ano:2023</h2>
-        <div>
-            <h3>Categorias</h3>
-            <div class="categorias">
-                <div class="item-categoria">
-                    <p>Casa</p><p>R$0.00</p>
-                </div>
-                <div class="item-categoria">
-                    <p>Carro</p><p>R$0.00</p>
-                </div>
-                <div class="item-categoria">
-                    <p>Mercado</p><p>R$0.00</p>
-                </div>
+            <div>
+                <h3>Categorias Inseridas</h3>
+                    <div class="container my-5">
+                        <div class="row g-3">
+                            <div class="col-4 col-md-4">
+                                <div class="card bg-main">
+                                    <div id="card-category" class="card-body">
+                                        <p>Casa</p><p>R$0.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-4">
+                                <div class="card bg-main">
+                                    <div id="card-category" class="card-body">
+                                        <p>Carro</p><p>R$0.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-4">
+                                <div class="card bg-main">
+                                    <div id="card-category" class="card-body">
+                                        <p>Mercado</p><p>R$0.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
-        </div>
     </section>
-    <section>
+    <section class="box-extra">
         <h2>Reserva de Emergência</h2>
         <table>
             <tr>
@@ -193,8 +247,18 @@
             </tr>
         </table>
     </section>
-    <section>
+    <section class="box-extra">
         <h2>Reserva de Oportunidades</h2>
-        <p>Valor Depositado: R$0.00</p>
+        <table>
+            <tr>
+                <td>Valor Depositado:</td>
+                <td>R$0.00</td>
+            </tr>
+        </table>
     </section>
+    <div class="back-btn">
+        <a href="#">
+            <ion-icon id="btn-add" name="add-circle"></ion-icon>
+        </a>
+    </div>
 @endsection

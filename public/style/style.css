@@ -31,6 +31,9 @@ header > h1{
     font-weight: bold;
     padding: 5px;
 }
+th, td{
+    border: 1px solid white;
+}
 #form-index{
     display: grid;
     place-items: center;
@@ -82,7 +85,7 @@ header > h1{
     appearance: none;
     content:"NÃO";
     display: inline-block;
-    width: 50px;
+    width: 45px;
     height: 35px;
     line-height: 35px;
     text-align: center;
@@ -96,12 +99,54 @@ header > h1{
 /* Estado ON do botão */
 .btn-checkbox input[type="checkbox"]:checked::before{
     background-color: green;
-    color: white;
     content: "SIM";
 }
 
 .bg-main{
     background-color: var(--cor-principal);
+}
+
+#icon-btn{
+    color: green;
+    font-size: 30px;
+}
+
+.btn-line{
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: var(--cor-principal);
+    border: none;
+}
+
+.btn-list-sv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#btn-add{
+    font-size: 90px;
+    position: fixed;
+    bottom: 15px;
+    right: 10px;
+    color: var(--cor-principal);
+}
+.back-btn{
+    background-color: white;
+    position: fixed;
+    bottom: 21px;
+    width: 95px;
+    height: 78px;
+    right: 0px;
+    border-radius: 35px 0 0 35px;
+    box-shadow: -1px 3px 8px 0px black;
+}
+.box-extra > table{
+    text-indent: 20px;
+}
+
+.box-extra > table  tr > td{
+    min-width: 175px;
 }
 
 .list-dasboard{

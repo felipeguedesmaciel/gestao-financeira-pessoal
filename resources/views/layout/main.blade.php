@@ -27,9 +27,10 @@
         <h1>Gestão Financeira Pessoal</h1>
         <p>Previsão: <button>on/off</button></p>
         <menu id="itens">
+            <ion-icon onclick="clickMenu()" name="close" id="close"></ion-icon>
             <ul>
-                <li><a href="#">Opção 1</a></li>
-                <li><a href="#">Opção 2</a></li>
+                <li><a href="#">Adicionar Compra</a></li>
+                <li><a href="#">Adicionar Recebimento</a></li>
                 <li>
                     <form action="/logout" method="POST">
                         @csrf
