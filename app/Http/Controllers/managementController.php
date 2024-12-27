@@ -16,7 +16,9 @@ class ManagementController extends Controller
 
     public function panel(){
 
-        return view('dashboard', ['user'=> Auth::user()]);
+        $user = Auth::user();
+        $itens = Management::where('user_id', $user->id)->get();
+        return view('dashboard', ['user'=> $user, 'itens' => $itens]);
     }
 
 

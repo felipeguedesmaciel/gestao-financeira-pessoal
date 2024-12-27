@@ -7,7 +7,12 @@
         <p style="color: white; padding-left:20px;">Olá, {{ $user->name }}.</p>
 @endif
     <section>
-        <h2>Saldo total: R$0.000,00</h2>
+        @php
+        $saldo = 0.00;
+        foreach ($itens as $item)
+         $saldo += $item->value;
+        @endphp
+        <h2>Saldo total: R${{$saldo}}</h2>     
     </section>
     <section>
         <h2>Este Mês</h2>
