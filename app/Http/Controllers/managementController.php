@@ -13,11 +13,12 @@ class ManagementController extends Controller
         
         return view('welcome');
     }
-
+    
     public function panel(){
 
         $user = Auth::user();
         $itens = Management::where('user_id', $user->id)->get();
+        
         return view('dashboard', ['user'=> $user, 'itens' => $itens]);
     }
 

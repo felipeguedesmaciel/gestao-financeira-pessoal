@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Gestão Financeira')
+@section('title', 'GF - Dashboard')
 
 @section('content')
 @if (isset($user))
@@ -9,17 +9,23 @@
     <section>
         @php
         $saldo = 0.00;
-        foreach ($itens as $item)
-         $saldo += $item->value;
+        $saldoM = 0.00;
+        $dateM = date("m/Y");
+        foreach ($itens as $item){
+            $saldo += $item->value;
+            if(date("m/Y", strtotime($item->date)) == $dateM){
+                $saldoM += $item->value;
+            }
+         }
         @endphp
         <h2>Saldo total: R${{$saldo}}</h2>     
     </section>
     <section>
-        <h2>Este Mês</h2>
+        <h2>Este Mês:</h2>
         <ul class="list-dasboard">
             <li>Entradas <p>R$0.00</p></li>
             <li>Saídas <p>R$0.00</p></li>
-            <li>Saldo <p>R$0.00</p></li>
+            <li>Saldo <p>{{$saldoM}}</p></li>
         </ul>
         <div>
             <h3>Categorias Inseridas</h3>
