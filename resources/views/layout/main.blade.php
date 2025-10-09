@@ -49,7 +49,7 @@
         @yield('content')
     </main>
     <footer>
-        <p>Desenvolvido por <a href="#">Felipe Maciel</a>&copy;</p>
+        <p>Desenvolvido por <a href="https://felipeguedesmaciel.github.io/portifolio/" target="_blank">Felipe Maciel</a>&copy;</p>
     </footer>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </body>
