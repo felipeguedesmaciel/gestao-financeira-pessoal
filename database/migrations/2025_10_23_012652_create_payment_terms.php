@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('itens', function (Blueprint $table) {
-            $table->boolean('paid');
+        Schema::create('payment_terms', function (Blueprint $table) {
+            $table->id(); //PK
+            $table->enum('type', ['cash', 'monthly', 'installment']);
+            $table->integer('installment'); // número da parcela (1,2,3,...)
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('itens', function (Blueprint $table) {
-            $table->dropColumn('paid');
-        });
+        Schema::dropIfExists('payment_terms');
     }
 };
