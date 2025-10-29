@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Management;
+use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
 
-class ManagementController extends Controller
+class ItemController extends Controller
 {
     public function index(){
         
@@ -17,7 +17,7 @@ class ManagementController extends Controller
     public function panel(){
 
         $user = Auth::user();
-        $itens = Management::where('user_id', $user->id)->get();
+        $itens = Item::where('user_id', $user->id)->get();
         
         return view('dashboard', ['user'=> $user, 'itens' => $itens]);
     }

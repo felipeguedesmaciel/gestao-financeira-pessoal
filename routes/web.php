@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\ItemController;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController;
@@ -23,7 +23,7 @@ use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\RoutePath;
 
 
-Route::get('/', [ManagementController::class, 'index']);
+Route::get('/', [ItemController::class, 'index']);
 
 Route::get('/menu-test', function () {
     return view('menu-test');
@@ -33,7 +33,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', [ManagementController::class, 'panel'] )->name('dashboard');
+    Route::get('/dashboard', [ItemController::class, 'panel'] )->name('dashboard');
 });
 
 
@@ -44,7 +44,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     // Authentication...
     if ($enableViews) {
         Route::get(RoutePath::for('login', '/'), //[AuthenticatedSessionController::class, 'create']
-        [ManagementController::class, 'index'])
+        [ItemController::class, 'index'])
             ->middleware(['guest:'.config('fortify.guard')])
             ->name('login');
     }
