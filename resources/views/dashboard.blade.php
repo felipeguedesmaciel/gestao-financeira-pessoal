@@ -7,7 +7,7 @@
         <p style="color: white; padding-left:20px;">Olá, {{ $user->name }}.</p>
 @endif
     <section>
-        @php
+        <!-- @php
         $saldo = 0.00;
         $saldoM = 0.00;
         $dateM = date("m/Y");
@@ -17,20 +17,30 @@
                 $saldoM += $item->value;
             }
          }
-        @endphp
-        <h2>Saldo total: R${{$saldo}}</h2>     
+        @endphp -->
+        <h2>Saldo total: R${{ number_format($saldo, 2, ',', '.') }}</h2>
     </section>
     <section>
         <h2>Este Mês:</h2>
         <ul class="list-dasboard">
             <li>Entradas <p>R$0.00</p></li>
             <li>Saídas <p>R$0.00</p></li>
-            <li>Saldo <p>{{$saldoM}}</p></li>
+            <li>Saldo <p>{{ number_format($saldoM, 2, ',', '.') }}</p></li>
         </ul>
         <div>
             <h3>Categorias Inseridas</h3>
                 <div class="container my-5">
                     <div class="row g-3">
+                        @foreach ($itens as $item)
+                            <div class="col-4 col-md-4">
+                                <div class="card bg-main">
+                                    <div id="card-category" class="card-body">
+                                        <p>{{$item->category}}</p>
+                                        <p>{{$item->value}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                         <div class="col-4 col-md-4">
                             <div class="card bg-main">
                                 <div id="card-category" class="card-body">
@@ -272,4 +282,5 @@
             <ion-icon id="btn-add" name="add-circle"></ion-icon>
         </a>
     </div>
+    
 @endsection

@@ -28,6 +28,7 @@ Route::get('/', [ItemController::class, 'index']);
 Route::get('/menu-test', function () {
     return view('menu-test');
 });
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
