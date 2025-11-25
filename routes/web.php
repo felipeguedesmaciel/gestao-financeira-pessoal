@@ -29,6 +29,8 @@ Route::get('/menu-test', function () {
     return view('menu-test');
 });
 
+Route::post('/itens', [ItemController::class, 'store'])->name('itens.store');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

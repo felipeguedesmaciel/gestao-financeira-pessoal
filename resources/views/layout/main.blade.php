@@ -29,7 +29,7 @@
         <menu id="itens">
             <ion-icon onclick="clickMenu()" name="close" id="close"></ion-icon>
             <ul>
-                <li><a href="#">Adicionar Compra</a></li>
+                <li><a href="#itemModal" data-bs-toggle="modal" data-bs-target="#itemModal">Adicionar Compra</a></li>
                 <li><a href="#">Adicionar Recebimento</a></li>
                 <li>
                     <form action="/logout" method="POST">
@@ -52,5 +52,57 @@
         <p>Desenvolvido por <a href="https://felipeguedesmaciel.github.io/portifolio/" target="_blank">Felipe Maciel</a>&copy;</p>
     </footer>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const select = document.getElementById('category_select');
+    const otherGroup = document.getElementById('category_other_group');
+    const otherInput = document.getElementById('category_other');
+    const hidden = document.getElementById('category_input');
+
+    function updateHidden() {
+        if (!select) return;
+        if (select.value === 'nova') {
+        otherGroup.style.display = '';
+        hidden.value = otherInput.value || '';
+        } else {
+        otherGroup.style.display = 'none';
+        hidden.value = select.value;
+        }
+    }
+
+    if (select) {
+        select.addEventListener('change', updateHidden);
+        if (otherInput) otherInput.addEventListener('input', function () {
+        if (select.value === 'nova') hidden.value = otherInput.value;
+        });
+        // inicializa
+        updateHidden();
+    }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+    const typeSelect = document.getElementById('type');
+    const installmentGroup = document.getElementById('installment_other_group');
+    const installmentInput = document.getElementById('installment');
+
+    if (!typeSelect || !installmentGroup || !installmentInput) return;
+
+    function toggleInstallment() {
+        if (typeSelect.value === 'Parcelado') {
+        installmentGroup.style.display = '';
+        installmentInput.required = true;
+        } else {
+        installmentGroup.style.display = 'none';
+        installmentInput.required = false;
+        // opcional: limpar valor quando não é parcelado
+        // installmentInput.value = '';
+        }
+    }
+
+    typeSelect.addEventListener('change', toggleInstallment);
+    toggleInstallment();
+    });
+    </script>
 </body>
 </html>

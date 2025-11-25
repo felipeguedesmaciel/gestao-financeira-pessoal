@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payment_terms', function (Blueprint $table) {
             $table->id(); //PK
-            $table->enum('type', ['cash', 'monthly', 'installment']);
-            $table->integer('installment'); // número da parcela (1,2,3,...)
+            $table->string('type', 50);
+            $table->integer('installment')->nullable(); // número da parcela (1,2,3,...)
             $table->timestamps();
         });
     }

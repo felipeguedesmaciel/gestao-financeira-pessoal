@@ -33,9 +33,9 @@ class Item extends Model
     /**
      * Um item pertence a uma condição de pagamento.
      */
-    public function PaymentTerm(): BelongsTo
+    public function PaymentTerm()
     {
-        return $this->belongsTo(PaymentTerm::class, 'condition_id', 'id');
+        return $this->belongsTo('App\Models\PaymentTerm');
     }
     
 }
