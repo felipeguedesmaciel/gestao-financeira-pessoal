@@ -81,6 +81,8 @@
         updateHidden();
     }
     });
+
+    //Condição de Pagamento type  Parcelado
     document.addEventListener('DOMContentLoaded', function () {
     const typeSelect = document.getElementById('type');
     const installmentGroup = document.getElementById('installment_other_group');
@@ -103,6 +105,26 @@
     typeSelect.addEventListener('change', toggleInstallment);
     toggleInstallment();
     });
+
+
+    // Placeholder do Dia do Vencimento pegando a data da primeira parcela
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const firstDate = document.getElementById('payment_date');
+            const payDay = document.getElementById('payment_day');
+
+            if (firstDate && payDay) {
+                firstDate.addEventListener('change', function (e) {
+                    const v = e.target.value; // formato esperado: YYYY-MM-DD
+                    if (!v) return;
+                    const parts = v.split('-');
+                    if (parts.length !== 3) return;
+                    const day = parseInt(parts[2], 10);
+                    if (isNaN(day)) return;
+                    payDay.value = day;
+                });
+            }
+        });
     </script>
 </body>
 </html>

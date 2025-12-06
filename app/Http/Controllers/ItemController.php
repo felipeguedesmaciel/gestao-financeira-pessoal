@@ -20,6 +20,7 @@ class ItemController extends Controller
 
         $user = Auth::user();
         $itens = Item::where('user_id', $user->id)->get();
+        dd($itens);
         // Buscar categorias distintas existentes nos itens (sem repetição)
         $categories = Item::select('category')
             ->distinct()
@@ -37,9 +38,11 @@ class ItemController extends Controller
 
         // Saldo do mês atual
         $now = Carbon::now();
-        $saldoM = $itens
-            ->filter(fn($i) => Carbon::parse($i->date)->format('m/Y') === $now->format('m/Y'))
+        $saldoM = Item::where('user_id', $user->id)
+            ->whereMonth('payment_date', $now->month)
+            ->whereYear('payment_date', $now->year)
             ->sum('value');
+        
 
         return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type'));
 
@@ -56,25 +59,30 @@ class ItemController extends Controller
 
         $unit_id = $last + 1; // próximo unit_id
 
-        //$paymentTerm = new PaymentTerm;
-        
-        // Verifica se a compra é parcelada
-        if($request->type =='Parcelado'){
+        // Converte a string de data para Carbon
+        $payment_date = Carbon::parse($request->payment_date);
+        //$day = Carbon::now();
+        $day = (int) $request->payment_day;
 
-            $now = Carbon::now();
+        // Verifica se a compra é parcelada
+        if($request->type == 'Parcelado'){
+
             $installment = $request->installment;
 
-            while($installment > 0){
+            for($i = 0; $i < $installment; $i++){
 
                 $paymentTerm = new PaymentTerm;
-
-                $paymentTerm->installment = $installment;
+                $paymentTerm->installment = $installment - $i;
                 $paymentTerm->type = $request->type;
                 $paymentTerm->save();
 
-                $installment_day = $now->format('Y-m')."-".$request->payment_date;
-                $item = new Item;
+                // Calcula data da parcela: pega a data base + $i meses, ajusta o dia
+                $installmentDate = $payment_date->copy()->addMonths($i);
+                $dayAdjusted = min($day, $installmentDate->daysInMonth);
+                $installmentDate->day = $dayAdjusted;
+                $installmentDate->setTime(0, 0, 0);
 
+                $item = new Item;
                 $item->user_id = $user->id;
                 $item->unit_id = $unit_id;
                 $item->category = $request->category;
@@ -82,25 +90,23 @@ class ItemController extends Controller
                 $item->value = $request->value;
                 $item->payment_method = $request->payment_method;
                 $item->date = $request->date;
-                $item->payment_date = $installment_day;
+                $item->payment_date = $installmentDate;
                 $item->status = $request->status;
                 $item->condition_id = $paymentTerm->id;
-
                 $item->save();
-
-                $installment--;  
             }
-        }else{
+
+        } else {
 
             $paymentTerm = new PaymentTerm;
-
             $paymentTerm->installment = 1;
             $paymentTerm->type = $request->type;
             $paymentTerm->save();
 
+            // Converte date para Carbon também
+            $itemDate = Carbon::parse($request->date);
 
             $item = new Item;
-
             $item->user_id = $user->id;
             $item->unit_id = $unit_id;
             $item->category = $request->category;
@@ -108,12 +114,10 @@ class ItemController extends Controller
             $item->value = $request->value;
             $item->payment_method = $request->payment_method;
             $item->date = $request->date;
-            $item->payment_date = $request->date;
+            $item->payment_date = $itemDate;
             $item->status = $request->status;
             $item->condition_id = $paymentTerm->id;
-
             $item->save();
-
         }
         
 

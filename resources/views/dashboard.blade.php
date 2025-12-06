@@ -7,17 +7,6 @@
         <p style="color: white; padding-left:20px;">Olá, {{ $user->name }}.</p>
 @endif
     <section>
-        <!-- @php
-        $saldo = 0.00;
-        $saldoM = 0.00;
-        $dateM = date("m/Y");
-        foreach ($itens as $item){
-            $saldo += $item->value;
-            if(date("m/Y", strtotime($item->date)) == $dateM){
-                $saldoM += $item->value;
-            }
-         }
-        @endphp -->
         <h2>Saldo total: R${{ number_format($saldo, 2, ',', '.') }}</h2>
     </section>
     <section>
@@ -287,7 +276,7 @@
             <ion-icon id="btn-add" name="add-circle"></ion-icon>
         </a>
     </div>
-    <!-- Modal de cadastro de item -->
+    <!-- Modal de cadastro de item COMPRA -->
     <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -328,7 +317,7 @@
                   @error('value') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Data</label>
+                  <label class="form-label">Data da Compra</label>
                   <input type="date" name="date" value="{{ old('date') }}" class="form-control">
                   @error('date') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
@@ -366,8 +355,18 @@
                       <option value="Parcelado">Parcelado</option>
                     </select>
                     <div id="installment_other_group" style="{{ old('type') == 'Parcelado' ? '' : 'display:none' }}; margin-top:8px;">
+                        <label for="title">Número de Parcelas</label>
                         <input type="number" name="installment" id="installment" min="1" class="form-control" placeholder="Número de parcelas" value="{{ old('installment') }}">
-                        <input type="number" name="payment_date" id="payment_date" style="margin-top:8px; max-width:230px" min="1" max="31" class="form-control" placeholder="Dia do vencimento (1-31)" value="{{ old('payment_date') }}">
+                        <div class="col-md-6">
+                        <label class="form-label">Data da primeira Parcela</label>
+                        <!-- id adicionado e name alterado para não conflitar com o campo principal 'date' -->
+                          <input type="date" name="payment_date" id="payment_date" value="{{ old('payment_date', old('date')) }}" class="form-control">
+                            @error('date') <div class="text-danger small">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-6" style="margin-top:8px;">
+                            <label class="form-label">Dia do vencimento das Parcelas</label>
+                            <input type="number" name="payment_day" id="payment_day" style="max-width:180px" min="1" max="31" class="form-control" placeholder="{{ old('payment_day') ?? '' }}" value="{{ old('payment_day') }}">
+                        </div>
                     </div>
                     @error('installment') 
                         <div class="text-danger small">{{ $message }}</div> 
@@ -391,7 +390,7 @@
       </div>
     </div>
 
-     <!-- Modal de cadastro de item 2  -->
+     <!-- Modal de cadastro de item 2  RECEBIMENTO -->
     <div class="modal fade" id="itemModal2" tabindex="-1" aria-labelledby="itemModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
