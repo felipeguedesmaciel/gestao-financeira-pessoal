@@ -20,9 +20,10 @@ class ItemController extends Controller
 
         $user = Auth::user();
         $itens = Item::where('user_id', $user->id)->get();
-        dd($itens);
+        
         // Buscar categorias distintas existentes nos itens (sem repetição)
         $categories = Item::select('category')
+            ->where('user_id', $user->id)
             ->distinct()
             ->orderBy('category')
             ->pluck('category');
