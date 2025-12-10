@@ -44,10 +44,18 @@ class ItemController extends Controller
             ->whereYear('payment_date', $now->year)
             ->sum('value');
         
+        // Totais por categoria no mês atual (novo)
+        $categoryTotals = Item::where('user_id', $user->id)
+            ->whereMonth('payment_date', $now->month)
+            ->whereYear('payment_date', $now->year)
+            ->groupBy('category')
+            ->selectRaw('category, SUM(value) as total')
+            ->orderBy('category')
+            ->get()
+            ->keyBy('category'); // transforma em array associativo [category => total]
 
-        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type'));
+        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals'));
 
-        //return view('dashboard', ['user'=> $user, 'itens' => $itens]);
     }
 
     public function store(Request $request)

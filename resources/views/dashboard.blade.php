@@ -20,62 +20,21 @@
             <h3>Categorias Inseridas</h3>
                 <div class="container my-5">
                     <div class="row g-3">
-                        @foreach ($itens as $item)
+                        @forelse ($categoryTotals as $category => $data)
                             <div class="col-4 col-md-4">
                                 <div class="card bg-main">
                                     <div id="card-category" class="card-body">
-                                        <p>{{$item->category}}</p>
-                                        <p>{{$item->value}}</p>
+                                        <p>{{ $category }}</p>
+                                        <p>R$ {{ number_format($data->total, 2, ',', '.') }}</p>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Casa</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Carro</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Mercado</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Internet</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Outros</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Viagens</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
+                        @empty
+                            <p>Sem categorias neste mês</p>
+                      @endforelse
                     </div>
-                </div>
-        </div>
-        <div>
+            </div>
+            
             <h3>Próximos Vencimento</h3>
             <form action="#" method="POST" enctype="multipart/form-data">
                 @csrf
