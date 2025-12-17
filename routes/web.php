@@ -37,6 +37,8 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [ItemController::class, 'panel'] )->name('dashboard');
+    Route::post('/itens', [ItemController::class, 'store'])->name('itens.store');
+    Route::put('/itens/update-status', [ItemController::class, 'updateStatus'])->name('itens.updateStatus'); 
 });
 
 

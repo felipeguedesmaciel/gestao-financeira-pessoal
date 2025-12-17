@@ -54,7 +54,13 @@ class ItemController extends Controller
             ->get()
             ->keyBy('category'); // transforma em array associativo [category => total]
 
-        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals'));
+        // Próximos vencimentos (status "To be paid") - ordena por payment_date
+        $upcomingPayments = Item::where('user_id', $user->id)
+            ->where('status', 'To be paid')
+            ->orderBy('payment_date')
+            ->get();
+
+        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments'));
 
     }
 
@@ -131,6 +137,23 @@ class ItemController extends Controller
         
 
         return redirect()->back()->with('success', 'Item inserido com sucesso.');
+    }
+
+        public function updateStatus(Request $request)
+    {
+        $user = Auth::user();
+
+        // Recebe array de IDs de itens que foram marcados como pagos
+        $itemIds = $request->input('item_ids', []);
+
+        if (!empty($itemIds)) {
+            // atualiza status para "Paid" dos itens selecionados
+            Item::where('user_id', $user->id)
+                ->whereIn('id', $itemIds)
+                ->update(['status' => 'Paid']);
+        }
+
+        return redirect()->back()->with('success', 'Status atualizado com sucesso.');
     }
 
 }

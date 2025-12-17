@@ -36,73 +36,39 @@
             </div>
             
             <h3>Próximos Vencimento</h3>
-            <form action="#" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('itens.updateStatus') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-            <table class="table table-striped">
+                <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Categoria</th>
+                        <th>Descrição</th>
                         <th>Vencimento</th>
                         <th>Valor</th>
                         <th>Pago</th>
                     </tr>
                 </thead>
-                <tr>
-                    <td>Carro</td>
-                    <td>10/02/2024</td>
-                    <td>R$0.00</td>
-                    <td class="col-table">
-                        <div class="btn-checkbox">
-                            <input type="checkbox" name="pago" id="pago" >
-                            <label for="pago"></label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Casa</td>
-                    <td>10/02/2024</td>
-                    <td>R$0.00</td>
-                    <td>
-                        <div class="btn-checkbox">
-                            <input type="checkbox" name="pago" id="pago" >
-                            <label for="pago"></label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Mercado</td>
-                    <td>10/02/2024</td>
-                    <td>R$0.00</td>
-                    <td>
-                        <div class="btn-checkbox">
-                            <input type="checkbox" name="pago" id="pago" >
-                            <label for="pago"></label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Outros</td>
-                    <td>10/02/2024</td>
-                    <td>R$0.00</td>
-                    <td>
-                        <div class="btn-checkbox">
-                            <input type="checkbox" name="pago" id="pago" >
-                            <label for="pago"></label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Internet</td>
-                    <td>10/02/2024</td>
-                    <td>R$0.00</td>
-                    <td>
-                        <div class="btn-checkbox">
-                            <input type="checkbox" name="pago" id="pago" >
-                            <label for="pago"></label>
-                        </div>
-                    </td>
-                </tr>
+                <tbody>
+                    @forelse ($upcomingPayments as $payment)
+                        <tr>
+                            <td>{{ $payment->category }}</td>
+                            <td>{{ $payment->description }}</td>
+                            <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d/m/Y') }}</td>
+                            <td>R$ {{ number_format($payment->value, 2, ',', '.') }}</td>
+                            <td class="col-table">
+                                <div class="btn-checkbox">
+                                    <input type="checkbox" name="item_ids[]" value="{{ $payment->id }}" class="item-checkbox">
+                                    <label></label>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">Sem pagamentos pendentes</td>
+                        </tr>
+                    @endforelse
+                </tbody>
             </table>
                 <div class="btn-list-sv">
                     <a href="#" class="btn btn-outline-primary">Editar direto na lista <img src="img/write.png" alt=""></a>
