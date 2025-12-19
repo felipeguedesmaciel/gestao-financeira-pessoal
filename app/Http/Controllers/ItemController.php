@@ -16,7 +16,7 @@ class ItemController extends Controller
         return view('welcome');
     }
     
-    public function panel(){
+    public function panel(Request $request){
 
         $user = Auth::user();
         $itens = Item::where('user_id', $user->id)->get();
@@ -54,13 +54,38 @@ class ItemController extends Controller
             ->get()
             ->keyBy('category'); // transforma em array associativo [category => total]
 
+        // próximo mês (adiciona 1 mês ao agora)
+        $next = Carbon::now()->addMonth();
+
+        $nextCategoryTotals = Item::where('user_id', $user->id)
+            ->whereMonth('payment_date', $next->month)
+            ->whereYear('payment_date', $next->year)
+            ->groupBy('category')
+            ->selectRaw('category, SUM(value) as total')
+            ->orderBy('category')
+            ->get()
+            ->keyBy('category');
+
+
         // Próximos vencimentos (status "To be paid") - ordena por payment_date
         $upcomingPayments = Item::where('user_id', $user->id)
             ->where('status', 'To be paid')
             ->orderBy('payment_date')
             ->get();
+        
+        // --- NOVO: totais por categoria para o ANO selecionado ---
+        // lê ?year=XXXX (se não informado usa o ano atual)
+        $selectedYear = (int) $request->query('year', Carbon::now()->year);
 
-        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments'));
+        $yearCategoryTotals = Item::where('user_id', $user->id)
+            ->whereYear('payment_date', $selectedYear)
+            ->groupBy('category')
+            ->selectRaw('category, SUM(value) as total')
+            ->orderBy('category')
+            ->get()
+            ->keyBy('category');
+        
+        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments', 'nextCategoryTotals', 'yearCategoryTotals','selectedYear'));
 
     }
 

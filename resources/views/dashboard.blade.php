@@ -86,84 +86,78 @@
         </ul>
         <div>
             <h3>Categorias Inseridas</h3>
-                <div class="container my-5">
-                    <div class="row g-3">
+            <div class="container my-5">
+                <div class="row g-3">
+                    @forelse ($nextCategoryTotals as $category => $data)
                         <div class="col-4 col-md-4">
                             <div class="card bg-main">
                                 <div id="card-category" class="card-body">
-                                    <p>Casa</p><p>R$0.00</p>
+                                    <p>{{ $category }}</p>
+                                    <p>R$ {{ number_format($data->total, 2, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Carro</p><p>R$0.00</p>
-                                </div>
-                            </div>
+                    @empty
+                        <div class="col-12">
+                            <p class="text-muted">Sem categorias com vencimento no próximo mês</p>
                         </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Mercado</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Internet</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Outros</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-4">
-                            <div class="card bg-main">
-                                <div id="card-category" class="card-body">
-                                    <p>Viagens</p><p>R$0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
+            </div>
         </div>
     </section>
-    <section>
-        <h2>Ano:2023</h2>
-            <div>
-                <h3>Categorias Inseridas</h3>
-                    <div class="container my-5">
-                        <div class="row g-3">
-                            <div class="col-4 col-md-4">
-                                <div class="card bg-main">
-                                    <div id="card-category" class="card-body">
-                                        <p>Casa</p><p>R$0.00</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4 col-md-4">
-                                <div class="card bg-main">
-                                    <div id="card-category" class="card-body">
-                                        <p>Carro</p><p>R$0.00</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4 col-md-4">
-                                <div class="card bg-main">
-                                    <div id="card-category" class="card-body">
-                                        <p>Mercado</p><p>R$0.00</p>
-                                    </div>
+    <section id="year">
+        <h2>
+            Ano:
+            <!-- botão que abre modal para alterar ano -->
+            <a href="#" data-bs-toggle="modal" data-bs-target="#selectYearModal" style="color:inherit; text-decoration:underline;">
+                {{ $selectedYear }}
+            </a>
+        </h2>
+
+        <!-- Modal para selecionar ano -->
+        <div class="modal fade" id="selectYearModal" tabindex="-1" aria-labelledby="selectYearModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+            <form action="{{ route('dashboard') }}#year" method="GET"> <!-- envia year via query -->
+                <div class="modal-header">
+                <h5 class="modal-title" id="selectYearModalLabel">Selecionar Ano</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                <label class="form-label">Ano</label>
+                <input type="number" name="year" class="form-control" min="1900" max="3000" value="{{ $selectedYear }}">
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Selecionar</button>
+                </div>
+            </form>
+            </div>
+        </div>
+        </div>
+
+        <div>
+            <h3>Categorias Inseridas</h3>
+            <div class="container my-5">
+                <div class="row g-3">
+                    @forelse ($yearCategoryTotals as $category => $data)
+                        <div class="col-4 col-md-4">
+                            <div class="card bg-main">
+                                <div id="card-category" class="card-body">
+                                    <p>{{ $category }}</p>
+                                    <p>R$ {{ number_format($data->total, 2, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @empty
+                        <div class="col-12">
+                            <p class="text-muted">Sem categorias registradas para {{ $selectedYear }}</p>
+                        </div>
+                    @endforelse
+                </div>
             </div>
+        </div>
     </section>
     <section class="box-extra">
         <h2>Reserva de Emergência</h2>
