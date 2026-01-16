@@ -159,31 +159,62 @@
             </div>
         </div>
     </section>
+    <!-- SEÇÕES DE RESERVAS DINÂMICAS -->
+    @forelse ($sectionsWithTransactions as $section)
+        <section class="box-extra">
+            <h2>{{ $section['section']->name }}</h2>
+            <table>
+                <tr>
+                    <td>Valor Depositado:</td>
+                    <td>R${{ number_format($section['depositedAmount'] ?? 0, 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Valor Sacado:</td>
+                    <td>R${{ number_format($section['totalWithdrawals'] ?? 0, 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Valor Total:</td>
+                    <td>R${{ number_format($section['section']->total_value, 2, ',', '.') }}</td>
+                </tr>
+                @if ($section['section']->target_value)
+                <tr>
+                    <td>Meta:</td>
+                    <td>R${{ number_format($section['section']->target_value, 2, ',', '.') }}</td>
+                </tr>
+                @endif
+            </table>
+        </section>
+    @empty
+        <section class="box-extra">
+            <h2>Nenhuma Reserva Criada</h2>
+            <p>Clique no botão "+" para adicionar uma reserva.</p>
+        </section>
+    @endforelse
+    
+    <!-- SEÇÃO DE DÍVIDAS DINÂMICAS -->
     <section class="box-extra">
-        <h2>Reserva de Emergência</h2>
-        <table>
-            <tr>
-                <td>Valor Depositado:</td>
-                <td>R$0.00</td>
-            </tr>
-            <tr>
-                <td>Meta de Valor:</td>
-                <td>R$0.00</td>
-            </tr>
-            <tr>
-                <td>Ainda Falta</td>
-                <td>R$0.00</td>
-            </tr>
-        </table>
-    </section>
-    <section class="box-extra">
-        <h2>Reserva de Oportunidades</h2>
-        <table>
-            <tr>
-                <td>Valor Depositado:</td>
-                <td>R$0.00</td>
-            </tr>
-        </table>
+        <h2>Dívidas a Quitar</h2>
+        @forelse ($debts as $debt)
+            <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                <h4>{{ $debt->name }}</h4>
+                <table style="width: 100%;">
+                    <tr>
+                        <td><strong>Valor Inicial:</strong></td>
+                        <td>R${{ number_format($debt->initial_value, 2, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Valor Acordado:</strong></td>
+                        <td>R${{ number_format($debt->agreed_value ?? 0, 2, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Diferença:</strong></td>
+                        <td>R${{ number_format($debt->initial_value - ($debt->agreed_value ?? 0), 2, ',', '.') }}</td>
+                    </tr>
+                </table>
+            </div>
+        @empty
+            <p>Nenhuma dívida registrada.</p>
+        @endforelse
     </section>
     <!-- <div class="back-btn">
         <a href="#">
@@ -358,6 +389,7 @@
       </div>
     </div>
 
+    <!-- Modal de opções de Itens -->
     <div class="modal fade" id="opcoesItems" aria-hidden="true" aria-labelledby="opcoesItemsLabel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -366,14 +398,118 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Escolha uma das 2 opções para adicionar.
+                    Escolha uma das opções para adicionar.
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" data-bs-target="#itemModal" data-bs-toggle="modal">Adicionar Compra</button>
                     <button class="btn btn-success" data-bs-target="#itemModal2" data-bs-toggle="modal">Adicionar Recebimento</button>
+                    <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Criar Nova Sessão
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item" type="button"  data-bs-target="#reservaModal" data-bs-toggle="modal">Reserva</button></li>
+                        <li><button class="dropdown-item" type="button"  data-bs-target="#dividaModal" data-bs-toggle="modal">Divida / Renegociação</button></li>
+                    </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Modal de cadastro de RESERVA -->
+    <div class="modal fade" id="reservaModal" tabindex="-1" aria-labelledby="reservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <form action="{{ route('sections.store') }}" method="POST">
+            @csrf
+            <div class="modal-header">
+            <h5 class="modal-title" id="reservaModalLabel">Adicionar Reserva</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                <label class="form-label" for="name">Nome da Reserva</label>
+                <select name="name" class="form-control" required>
+                    <option value="">Selecione...</option>
+                    <option value="Reserva de Emergência">Reserva de Emergência</option>
+                    <option value="Reserva de Oportunidade">Reserva de Oportunidade</option>
+                </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="total_value">Depósito Inicial</label>
+                    <input type="number" name="total_value" step="0.01" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                <label for="target_value" class="form-label">Meta</label>
+                <input type="number" step="0.01" name="target_value" class="form-control" placeholder="Ex: 5000.00">
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button type="submit" class="btn btn-primary">Criar</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+    <!-- Modal de cadastro de DÍVIDA -->
+    <div class="modal fade" id="dividaModal" tabindex="-1" aria-labelledby="dividaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <form action="{{ route('debts.store') }}" method="POST">
+            @csrf
+            <div class="modal-header">
+            <h5 class="modal-title" id="dividaModalLabel">Adicionar Dívida</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                <label class="form-label" for="name">Nome da Dívida</label>
+                <input type="text" name="name" class="form-control" placeholder="Ex: TV, Casa" required>
+                </div>
+                <div class="col-md-6">
+                <label class="form-label" for="initial_debt_amount">Valor Inicial</label>
+                <input type="number" step="0.01" name="initial_debt_amount" class="form-control" placeholder="Ex: 2500.00" required>
+                </div>
+                <label for="agreed_value" class="form-label">Ouve Acordo?:</label>
+                <select name="agreed_value" id="agreed_value">
+                    <option value="0">Não</option>
+                    <option value="1">Sim</option>
+                </select>
+                <div id="agreement_fields" style="display:none;">
+                    <div class="col-md-6">
+                        <label class="form-label" for="agreed_value">Valor Acordado</label>
+                        <input type="number" step="0.01" name="agreed_value" class="form-control" placeholder="Ex: 1500.00">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="payment_method">Condição de pagamento</label>
+                        <select name="payment_method">
+                            <option value="À vista">À vista</option>
+                            <option value="Parcelado">Parcelado</option>
+                        </select>
+                        <div id="installment_fields" style="display:none;">
+                            <label class="form-label" for="installments">Número de parcelas</label>
+                            <input type="number" name="installments">
 
+                            <label class="form-label" for="installment_value">Valor da Parcela</label>
+                            <input type="number" name="installment_value" step="0.01">
+
+                            <label class="form-label" for="amount_paid">Valor já pago:</label>
+                            <input type="number" name="amount_paid" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button type="submit" class="btn btn-primary">Criar</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
 @endsection

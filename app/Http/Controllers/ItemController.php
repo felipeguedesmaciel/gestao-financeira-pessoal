@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Item;
 use App\Models\PaymentTerm;
+use App\Models\Section;
+use App\Models\Debt;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -85,8 +87,22 @@ class ItemController extends Controller
             ->get()
             ->keyBy('category');
         
-        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments', 'nextCategoryTotals', 'yearCategoryTotals','selectedYear'));
+        //
+        $sections = Section::where('user_id', $user->id)->get();
+        $debts = Debt::where('user_id', $user->id)->get();
 
+        // Preparar dados de transações para cada seção
+        $sectionsWithTransactions = $sections->map(function ($section) {
+            return [
+                'section' => $section,
+                'totalDeposits' => $section->getTotalDeposits(),
+                'totalWithdrawals' => $section->getTotalWithdrawals(),
+                'depositedAmount' => $section->getDepositedAmount(),
+            ];
+        });
+
+        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments', 'nextCategoryTotals', 'yearCategoryTotals','selectedYear', 'sections', 'sectionsWithTransactions', 'debts'));
+        
     }
 
     public function store(Request $request)
@@ -179,6 +195,36 @@ class ItemController extends Controller
         }
 
         return redirect()->back()->with('success', 'Status atualizado com sucesso.');
+    }
+
+    // 2 metodos adicionados par criar as sessões de Reserva e Dívida:
+
+    public function storeSection(Request $request)
+    {
+        $user = Auth::user();
+
+        Section::create([
+            'user_id' => $user->id,
+            'name' => $request->name,
+            'total_value' => $request->total_value,
+            'target_value' => $request->target_value,
+        ]);
+
+        return redirect()->back()->with('success', 'Seção criada com sucesso!');
+    }
+
+    public function storeDebt(Request $request)
+    {
+        $user = Auth::user();
+
+        Debt::create([
+            'user_id' => $user->id,
+            'name' => $request->debt_name,
+            'initial_value' => $request->initial_value,
+            'agreed_value' => $request->agreed_value ?? null,
+        ]);
+
+        return redirect()->back()->with('success', 'Dívida adicionada com sucesso!');
     }
 
 }

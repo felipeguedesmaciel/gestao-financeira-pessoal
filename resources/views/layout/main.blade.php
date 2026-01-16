@@ -125,6 +125,15 @@
                 });
             }
         });
+
+        //Mostra os campos se o valor foi acordado "Sim" no formulário Dívida
+        document.getElementById('agreed_value').addEventListener('change', function() {
+            document.getElementById('agreement_fields').style.display = this.value == '1' ? 'block' : 'none';
+        });
+
+        document.getElementById('payment_method').addEventListener('change', function() {
+            document.getElementById('installment_fields').style.display = this.value == 'Parcelado' ? 'block' : 'none';
+        });
     </script>
 </body>
 </html>
