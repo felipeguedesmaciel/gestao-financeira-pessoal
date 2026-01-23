@@ -197,3 +197,5 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
 
 Route::post('/sections', [ItemController::class, 'storeSection'])->name('sections.store');
 Route::post('/debts', [ItemController::class, 'storeDebt'])->name('debts.store');
+
+Route::post('/reserve-transactions', [ItemController::class, 'storeReserveTransaction'])->name('reserve-transactions.store');

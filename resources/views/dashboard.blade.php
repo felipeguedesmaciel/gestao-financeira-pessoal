@@ -176,12 +176,13 @@
                     <td>Valor Total:</td>
                     <td>R${{ number_format($section['section']->total_value, 2, ',', '.') }}</td>
                 </tr>
-                @if ($section['section']->target_value)
                 <tr>
                     <td>Meta:</td>
                     <td>R${{ number_format($section['section']->target_value, 2, ',', '.') }}</td>
                 </tr>
-                @endif
+                <tr>
+                    <td><button type="button" class="mt-3 btn btn-primary" data-bs-target="#modalreserve-transactions" data-bs-toggle="modal">Adicionar Transação</button></td>
+                </tr>
             </table>
         </section>
     @empty
@@ -511,5 +512,41 @@
         </form>
         </div>
     </div>
+    </div>
+
+    <!-- Modal para Adicionar Transação de Reserva -->
+    <div class="modal fade" id="modalreserve-transactions" tabindex="-1" aria-labelledby="modalreserve-transactions" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <form action="{{ route('reserve-transactions.store') }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                <h5 class="modal-title" id="modalreserve-transactions">Adicionar Transação - {{ $section['section']->name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-6">
+                        <div class="row my-3">
+                            <input type="hidden" name="id_section" value="{{ $section['section']->id }}">
+
+                            <label class="form-label" for="transaction-{{ $section['section']->id }}">Tipo de Transação:</label>
+                            <select name="transaction" id="transaction-{{ $section['section']->id }}" required>
+                                <option value="Depósito">Depósitar</option>
+                                <option value="Saque">Sacar</option>
+                            </select>
+                        </div>
+                        <div class="row my-3">
+                            <label class="form-label" for="value-{{ $section['section']->id }}">Valor:</label>
+                            <input type="number" name="value" id="value-{{ $section['section']->id }}" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+            </div>
+        </div>
     </div>
 @endsection

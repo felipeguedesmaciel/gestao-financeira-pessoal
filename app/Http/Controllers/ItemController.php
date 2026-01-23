@@ -102,7 +102,7 @@ class ItemController extends Controller
         });
 
         return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments', 'nextCategoryTotals', 'yearCategoryTotals','selectedYear', 'sections', 'sectionsWithTransactions', 'debts'));
-        
+
     }
 
     public function store(Request $request)
@@ -225,6 +225,39 @@ class ItemController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Dívida adicionada com sucesso!');
+    }
+
+    public function storeReserveTransaction(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Validar dados
+        $request->validate([
+            'id_section' => 'required|exists:sections,id',
+            'transaction' => 'required|in:Depósito,Saque',
+            'value' => 'required|numeric|min:0.01',
+        ]);
+
+        // Se for saque, multiplicar o valor por -1
+        $value = $request->transaction === 'Saque' ? -$request->value : $request->value;
+
+        //pega a data atual para salvar.
+        $date = Carbon::now();
+
+        // Criar a transação
+        \App\Models\ReserveTransaction::create([
+            'id_section' => $request->id_section,
+            'transaction' => $request->transaction,
+            'value' => $value,
+            'date' => $date,
+        ]);
+
+        // Atualizar o total_value da section
+        $section = Section::find($request->id_section);
+        $totalValue = $section->transactions()coals->sum('value');
+        $section->update(['total_value' => $totalValue]);
+
+        return redirect()->back()->with('success', 'Transação adicionada com sucesso!');
     }
 
 }
