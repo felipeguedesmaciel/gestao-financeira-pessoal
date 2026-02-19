@@ -254,7 +254,7 @@ class ItemController extends Controller
 
         // Atualizar o total_value da section
         $section = Section::find($request->id_section);
-        $totalValue = $section->transactions()coals->sum('value');
+        $totalValue = $section->transactions()->sum('value');
         $section->update(['total_value' => $totalValue]);
 
         return redirect()->back()->with('success', 'Transação adicionada com sucesso!');
