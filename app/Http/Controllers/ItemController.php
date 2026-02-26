@@ -217,11 +217,16 @@ class ItemController extends Controller
     {
         $user = Auth::user();
 
+        $amountToPay = $request->agreed_value;
+
         Debt::create([
             'user_id' => $user->id,
-            'name' => $request->debt_name,
-            'initial_value' => $request->initial_value,
+            'name' => $request->name,
+            'initial_debt_amount' => $request->initial_debt_amount,
             'agreed_value' => $request->agreed_value ?? null,
+            'payment_method' => $request->payment_method ?? null,
+            'amount_paid' => $request->amount_paid ?? 0,
+            'amount_to_pay' => $amountToPay,
         ]);
 
         return redirect()->back()->with('success', 'Dívida adicionada com sucesso!');
@@ -260,4 +265,6 @@ class ItemController extends Controller
         return redirect()->back()->with('success', 'Transação adicionada com sucesso!');
     }
 
+public function editDebt($id) { }
+public function destroyDebt($id) { }
 }

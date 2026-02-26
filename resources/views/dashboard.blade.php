@@ -201,18 +201,37 @@
                 <table style="width: 100%;">
                     <tr>
                         <td><strong>Valor Inicial:</strong></td>
-                        <td>R${{ number_format($debt->initial_value, 2, ',', '.') }}</td>
+                        <td>R${{ number_format($debt->initial_debt_amount, 2, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td><strong>Valor Acordado:</strong></td>
-                        <td>R${{ number_format($debt->agreed_value ?? 0, 2, ',', '.') }}</td>
+                        @if ($debt->agreed_value==null or $debt->agreed_value <= 0)
+                            <td>Sem Acordo</td>
+                        @else
+                        <td>R${{ number_format($debt->agreed_value, 2, ',', '.') }}</td>
+                        @endif
                     </tr>
                     <tr>
-                        <td><strong>Diferença:</strong></td>
-                        <td>R${{ number_format($debt->initial_value - ($debt->agreed_value ?? 0), 2, ',', '.') }}</td>
+                        <td><strong>Valor Pago:</strong></td>
+                        <td>R${{ number_format($debt->amount_paid?? 0, 2, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Valor a Pagar:</strong></td>
+                        <td>R${{ number_format($debt->amount_to_pay ?? 0, 2, ',', '.') }}</td>
                     </tr>
                 </table>
             </div>
+            <div class="debt-actions">
+    <form action="{{ route('debts.edit', $debt->id) }}" method="GET" style="display:inline;">
+        <button type="submit" class="btn btn-edit">Editar</button>
+    </form>
+    
+    <form action="{{ route('debts.destroy', $debt->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta dívida?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-delete">Excluir</button>
+    </form>
+</div>
         @empty
             <p>Nenhuma dívida registrada.</p>
         @endforelse

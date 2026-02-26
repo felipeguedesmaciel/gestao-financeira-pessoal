@@ -199,3 +199,7 @@ Route::post('/sections', [ItemController::class, 'storeSection'])->name('section
 Route::post('/debts', [ItemController::class, 'storeDebt'])->name('debts.store');
 
 Route::post('/reserve-transactions', [ItemController::class, 'storeReserveTransaction'])->name('reserve-transactions.store');
+
+Route::get('/debts/{debt}/edit', [ItemController::class, 'editDebt'])->name('debts.edit');
+
+Route::delete('/debts/{debt}', [ItemController::class, 'destroyDebt'])->name('debts.destroy');
