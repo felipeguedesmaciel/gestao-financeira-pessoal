@@ -203,3 +203,5 @@ Route::post('/reserve-transactions', [ItemController::class, 'storeReserveTransa
 Route::get('/debts/{debt}/edit', [ItemController::class, 'editDebt'])->name('debts.edit');
 
 Route::delete('/debts/{debt}', [ItemController::class, 'destroyDebt'])->name('debts.destroy');
+
+Route::put('/debts/{debt}', [ItemController::class, 'updateDebt'])->name('debts.update');

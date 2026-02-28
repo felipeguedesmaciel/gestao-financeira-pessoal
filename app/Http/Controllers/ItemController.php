@@ -265,6 +265,41 @@ class ItemController extends Controller
         return redirect()->back()->with('success', 'Transação adicionada com sucesso!');
     }
 
-public function editDebt($id) { }
-public function destroyDebt($id) { }
+public function editDebt($id) { 
+    $user = Auth::user();
+    $debt = Debt::where('user_id', $user->id)->findOrFail($id);
+    return view('edit-debt', compact('debt'));
+}
+
+public function updateDebt(Request $request, $id)
+{
+    $user = Auth::user();
+    $debt = Debt::where('user_id', $user->id)->findOrFail($id);
+
+    $validated = $request->validate([
+        'name'                => 'required|string',
+        'initial_debt_amount' => 'required|numeric|min:0',
+        'agreed_value'        => 'nullable|numeric|min:0',
+        'payment_method'      => 'nullable|string',
+        'amount_paid'         => 'nullable|numeric|min:0',
+    ]);
+
+    // Validando se o usuário não colocar nada no campo "Valor já pago".
+    $validated['amount_paid'] = $validated['amount_paid'] ?? 0;
+
+    $validated['amount_to_pay'] = 
+        ($validated['agreed_value'] ?? $validated['initial_debt_amount']) - $validated['amount_paid'];
+
+    $debt->update($validated);
+
+    return redirect()->back()->with('success', 'Dívida atualizada com sucesso!');
+}
+public function destroyDebt($id)
+{
+    $user = Auth::user();
+    $debt = Debt::where('user_id', $user->id)->findOrFail($id);
+    $debt->delete();
+
+    return redirect()->back()->with('success', 'Dívida excluída com sucesso!');
+}
 }
