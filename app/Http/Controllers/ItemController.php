@@ -226,7 +226,7 @@ class ItemController extends Controller
             'agreed_value' => $request->agreed_value ?? null,
             'payment_method' => $request->payment_method ?? null,
             'amount_paid' => $request->amount_paid ?? 0,
-            'amount_to_pay' => $amountToPay,
+            'amount_to_pay' => $amountToPay ?? null,
         ]);
 
         return redirect()->back()->with('success', 'Dívida adicionada com sucesso!');
