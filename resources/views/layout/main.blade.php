@@ -127,12 +127,70 @@
         });
 
         //Mostra os campos se o valor foi acordado "Sim" no formulário Dívida
-        document.getElementById('agreed_value').addEventListener('change', function() {
-            document.getElementById('agreement_fields').style.display = this.value == '1' ? 'block' : 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            // Escuta mudanças em todos os radio buttons do grupo
+            document.querySelectorAll('input[name="agreed_value"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    // Mostra os campos apenas se "Sim" estiver selecionado
+                    document.getElementById('agreement_fields').style.display = (this.value === '1') ? 'block' : 'none';
+                });
+            });
+        });
+        
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const debtTypeSelect = document.getElementById('debt_type');
+            const debtInstallmentGroup = document.getElementById('debt_installment_other_group');
+            const avistaGroup = document.getElementById('debt_avista_payment_date_group');
+
+            if (!debtTypeSelect) return;
+
+            function toggleDebtFields() {
+                if (debtInstallmentGroup)
+                    debtInstallmentGroup.style.display = debtTypeSelect.value === 'Parcelado' ? 'block' : 'none';
+                if (avistaGroup)
+                    avistaGroup.style.display = debtTypeSelect.value === 'À vista' ? 'block' : 'none';
+            }
+
+            debtTypeSelect.addEventListener('change', toggleDebtFields);
+            toggleDebtFields();
         });
 
-        document.getElementById('payment_method').addEventListener('change', function() {
-            document.getElementById('installment_fields').style.display = this.value == 'Parcelado' ? 'block' : 'none';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const agreedValueInput = document.getElementById('debt_agreed_value');
+            const installmentNumberInput = document.getElementById('debt_installment_number');
+            const installmentValueDisplay = document.getElementById('debt_installment_value_display');
+            const debtTypeSelect = document.getElementById('debt_type');
+
+            if (!agreedValueInput || !installmentNumberInput || !installmentValueDisplay) return;
+
+            function formatCurrency(value) {
+                return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            function updateInstallmentValue() {
+                const agreedValue = parseFloat(agreedValueInput.value.replace(',', '.'));
+                const installments = parseInt(installmentNumberInput.value, 10);
+
+                if (!debtTypeSelect || debtTypeSelect.value !== 'Parcelado') {
+                    installmentValueDisplay.textContent = '-';
+                    return;
+                }
+
+                if (isNaN(agreedValue) || agreedValue <= 0 || isNaN(installments) || installments < 1) {
+                    installmentValueDisplay.textContent = '-';
+                    return;
+                }
+
+                const installmentValue = agreedValue / installments;
+                installmentValueDisplay.textContent = `R$ ${formatCurrency(installmentValue)}`;
+            }
+
+            agreedValueInput.addEventListener('input', updateInstallmentValue);
+            installmentNumberInput.addEventListener('input', updateInstallmentValue);
+            debtTypeSelect.addEventListener('change', updateInstallmentValue);
+            updateInstallmentValue();
         });
     </script>
 </body>

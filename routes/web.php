@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\DebtController;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController;
@@ -196,12 +197,12 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
 });
 
 Route::post('/sections', [ItemController::class, 'storeSection'])->name('sections.store');
-Route::post('/debts', [ItemController::class, 'storeDebt'])->name('debts.store');
+Route::post('/debts', [DebtController::class, 'storeDebt'])->name('debts.store');
 
 Route::post('/reserve-transactions', [ItemController::class, 'storeReserveTransaction'])->name('reserve-transactions.store');
 
-Route::get('/debts/{debt}/edit', [ItemController::class, 'editDebt'])->name('debts.edit');
+Route::get('/debts/{debt}/edit', [DebtController::class, 'editDebt'])->name('debts.edit');
 
-Route::delete('/debts/{debt}', [ItemController::class, 'destroyDebt'])->name('debts.destroy');
+Route::delete('/debts/{debt}', [DebtController::class, 'destroyDebt'])->name('debts.destroy');
 
-Route::put('/debts/{debt}', [ItemController::class, 'updateDebt'])->name('debts.update');
+Route::put('/debts/{debt}', [DebtController::class, 'updateDebt'])->name('debts.update');

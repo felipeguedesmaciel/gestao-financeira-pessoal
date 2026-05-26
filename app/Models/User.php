@@ -64,6 +64,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+ 
+          /**
+     * Um usuário possui vários itens.
+     */
     public function itens(){
         return $this->hasMany('App\Models\Item');
     }

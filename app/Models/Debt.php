@@ -12,4 +12,11 @@ class Debt extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+              /**
+     * Uma dívida possui várias datas de vencimento.
+     */
+    public function duedatedebt(){
+        return $this->hasMany('App\Models\DueDateDebt');
+    }
 }
