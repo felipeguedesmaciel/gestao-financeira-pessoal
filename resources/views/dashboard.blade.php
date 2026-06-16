@@ -222,19 +222,39 @@
                 </table>
             </div>
             <div class="debt-actions">
-    <form action="{{ route('debts.edit', $debt->id) }}" method="GET" style="display:inline;">
-        <button type="submit" class="btn btn-edit">Editar</button>
-    </form>
-    
-    <form action="{{ route('debts.destroy', $debt->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta dívida?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-delete">Excluir</button>
-    </form>
-</div>
-        @empty
-            <p>Nenhuma dívida registrada.</p>
-        @endforelse
+                <!-- <a class="btn btn-edit" href="{{ route('debts.edit', $debt->id) }}" role="button" data-bs-toggle="modal" data-bs-target="#editDebt">Editar
+                </a> -->
+                <!-- <form action="{{ route('debts.edit', $debt->id) }}" method="GET" style="display:inline;">
+                    <button type="submit" class="btn btn-edit">Editar</button>
+                </form> -->
+
+                <button type="button" 
+                    class="btn btn-edit" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#minhaModal" 
+                    data-id="{{ $debt->id }}" 
+                    data-nome="{{ $debt->name }}"
+                    data-initial_debt_amount="{{ $debt->initial_debt_amount }}"
+                    data-agreed_value="{{ $debt->agreed_value }}"
+                    data-payment_method="{{ $debt->payment_method }}"
+                    data-amount_paid="{{ $debt->amount_paid ?? 0 }}"
+                    data-amount_to_pay="{{ $debt->amount_to_pay ?? 0 }}"
+                    data-type="{{ $debt->payment_method ?? '' }}"
+                    data-installment="{{ optional($debt)->installment ?? '' }}"
+                    data-payment_date="{{ optional($debt)->payment_date ?? '' }}"
+                    data-payment_day="{{ optional($debt)->payment_day ?? '' }}"
+                    >
+                    Editar
+                </button>
+                <form action="{{ route('debts.destroy', $debt->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta dívida?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-delete">Excluir</button>
+                </form>
+            </div>
+            @empty
+                <p>Nenhuma dívida registrada.</p>
+            @endforelse
     </section>
     <!-- <div class="back-btn">
         <a href="#">
@@ -466,6 +486,14 @@
                 </div>
             </div>
             </div>
+            <div class="col-md-6" style="margin-top:8px;">
+                <label class="form-label">Método de Pagamento</label>
+                <input type="text" name="payment_method" id="edit_payment_method" class="form-control" value="">
+            </div>
+            <div class="col-md-6" style="margin-top:8px;">
+                <label class="form-label">Valor já pago</label>
+                <input type="number" step="0.01" name="amount_paid" id="edit_amount_paid" class="form-control" value="0">
+            </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             <button type="submit" class="btn btn-primary">Criar</button>
@@ -555,6 +583,90 @@
         </form>
         </div>
     </div>
+    </div>
+
+    <!-- Modal de editar DÍVIDA -->
+    <div class="modal fade" id="minhaModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('debts.update', $debt->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Dívida</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <!-- Nome da dívida -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="name">Nome da Dívida</label>
+                                <input type="text" name="name" class="form-control" id="modalNome" required>
+                            </div>
+                            <!-- Valor Inicial -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="initial_debt_amount">Valor Inicial</label>
+                                <input type="number" step="0.01" name="initial_debt_amount" class="form-control" id="modalInitial_debt_amount">
+                            </div>
+                            <!-- Ouve Acordo? -->
+                            <div class="mb-3">
+                                <div class="col-md-6">
+                                    <label for="edit_agreed_value" class="form-label">Ouve Acordo?:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="edit_agreed_value" id="agreed_yes" value="1">
+                                        <label class="form-check-label" for="agreed_yes">Sim</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="edit_agreed_value" id="agreed_no" value="0"> 
+                                        <label class="form-check-label" for="agreed_no">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Se Acordo for "Sim" abre esses campos "Valor Acordado" e "Condição de pagamento" -->
+                            <div id="edit_agreement_fields" style="display:none;">
+                                <!-- Valor Acordado -->
+                                <div class="col-md-6">
+                                    <label class="form-label" for="debt_agreed_value">Valor Acordado</label>
+                                    <input type="number" step="0.01" name="agreed_value" id="modalAgreed_value" class="form-control">
+                                </div>
+                                <!-- Condição de pagamento -->
+                                <div class="col-md-6" style="margin-top:8px;">
+                                    <label class="form-label" for="settlement_condition">Condição de pagamento</label>
+                                    <select class="form-select" id="modalType" name="meu_tipo"></select>
+                                    <!-- Quando usuário selecionar qualquer Condição de Pagamento abre se "Data de Pagamento"-->
+                                    <div id="debt_avista_payment_date_group" style="display:none; margin-top:8px;">
+                                        <label class="form-label" for="avista_payment_date">Data de Pagamento</label>
+                                        <input type="date" name="avista_payment_date" id="avista_payment_date" class="form-control">
+                                    </div>
+                                    <div id="debt_installment_other_group" style="{{ old('type') == 'Parcelado' ? '' : 'display:none' }}; margin-top:8px;">
+                                        <label for="title">Número de Parcelas</label>
+                                        <input type="number" name="installment" id="debt_installment_number" min="1" class="form-control" placeholder="Número de parcelas" value="{{ old('installment') }}">
+                                        <div class="col-md-6">
+                                        <label class="form-label">Data da primeira Parcela</label>
+                                        <!-- id adicionado e name alterado para não conflitar com o campo principal 'date' -->
+                                        <input type="date" name="payment_date" id="payment_date" value="{{ old('payment_date', old('date')) }}" class="form-control">
+                                            @error('date') <div class="text-danger small">{{ $message }}</div> @enderror
+                                        </div>
+                                        <div class="col-md-6" style="margin-top:8px;">
+                                            <label class="form-label">Dia do vencimento das Parcelas</label>
+                                            <input type="number" name="payment_day" id="payment_day" style="max-width:180px" min="1" max="31" class="form-control" placeholder="{{ old('payment_day') ?? '' }}" value="{{ old('payment_day') }}">
+                                        </div>
+                                        <div class="col-md-6" style="margin-top:8px;">Valor da Parcela: <span id="debt_installment_value_display">-</span></div>
+                                    </div>
+                                    @error('installment') 
+                                        <div class="text-danger small">{{ $message }}</div> 
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Criar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Modal para Adicionar Transação de Reserva -->
