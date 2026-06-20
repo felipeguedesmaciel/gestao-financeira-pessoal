@@ -410,19 +410,50 @@
             selectType.appendChild(newOption3);
         }
 
+        const inputData = document.getElementById('cash_payment_date');
+        const inputInstallmentData = document.getElementById('date_number_installment');
+        if (inputData) {
+            // Se vier preenchido pelo botão, mostra. Se vier vazio ("Selecione..."), esconde.
+            inputData.style.display = (type === "À vista") ? 'block' : 'none';
+            inputInstallmentData.style.display = (type === "Parcelado") ? 'block' : 'none';
+            
+        }
+
+    });
+
+    // MONITORA MUDANÇA (quando o usuário escolhe na tela) ---
+    document.getElementById('modalType').addEventListener('change', function() {
+        const inputData = document.getElementById('cash_payment_date');
+        const inputInstallmentData = document.getElementById('date_number_installment');
+        
+        if (inputData) {
+            // Se o valor selecionado pelo usuário for "À Vista", exibe o campo "Data de Pagamento"
+            if (this.value === "À Vista") {
+                inputInstallmentData.style.display = 'none';
+                inputData.style.display = 'block';
+            } else if(this.value === "Parcelado"){
+                // Se o valor selecionado pelo usuário for "Parcelado", exibe os campos "Data da Primeira Parcela", "Número de Parcelas", "Dia do Vencimento" e mostra o "Valor da Parcela".
+                inputData.style.display = 'none';
+                inputInstallmentData.style.display = 'block';
+            }else{
+                // Se ele voltar para o "Selecione...", os campos somem novamente
+                //inputData.style.display = 'none';
+                inputInstallmentData.style.display = 'none';
+            }
+        }
     });
 
         
-        //Mostra os campos se o valor foi acordado "Sim" no formulário Dívida
-        document.addEventListener('DOMContentLoaded', function() {
-            // Escuta mudanças em todos os radio buttons do grupo
-            document.querySelectorAll('input[name="edit_agreed_value"]').forEach(function(radio) {
-                radio.addEventListener('change', function() {
-                    // Mostra os campos apenas se "Sim" estiver selecionado
-                    document.getElementById('edit_agreement_fields').style.display = (this.value === '1') ? 'block' : 'none';
-                });
+    //Mostra os campos se o valor foi acordado "Sim" no formulário Dívida
+    document.addEventListener('DOMContentLoaded', function() {
+        // Escuta mudanças em todos os radio buttons do grupo
+        document.querySelectorAll('input[name="edit_agreed_value"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                // Mostra os campos apenas se "Sim" estiver selecionado
+                document.getElementById('edit_agreement_fields').style.display = (this.value === '1') ? 'block' : 'none';
             });
         });
+    });
 
         
     </script>

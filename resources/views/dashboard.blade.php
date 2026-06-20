@@ -634,11 +634,11 @@
                                     <label class="form-label" for="settlement_condition">Condição de pagamento</label>
                                     <select class="form-select" id="modalType" name="meu_tipo"></select>
                                     <!-- Quando usuário selecionar qualquer Condição de Pagamento abre se "Data de Pagamento"-->
-                                    <div id="debt_avista_payment_date_group" style="display:none; margin-top:8px;">
+                                    <div id="cash_payment_date" style="display:none; margin-top:8px;">
                                         <label class="form-label" for="avista_payment_date">Data de Pagamento</label>
                                         <input type="date" name="avista_payment_date" id="avista_payment_date" class="form-control">
                                     </div>
-                                    <div id="debt_installment_other_group" style="{{ old('type') == 'Parcelado' ? '' : 'display:none' }}; margin-top:8px;">
+                                    <div id="date_number_installment" style="display:none; margin-top:8px;">
                                         <label for="title">Número de Parcelas</label>
                                         <input type="number" name="installment" id="debt_installment_number" min="1" class="form-control" placeholder="Número de parcelas" value="{{ old('installment') }}">
                                         <div class="col-md-6">
@@ -662,7 +662,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary">Criar</button>
+                        <button type="submit" class="btn btn-primary">Editar</button>
                     </div>
                 </form>
             </div>
