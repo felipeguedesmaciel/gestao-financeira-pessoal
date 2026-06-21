@@ -360,8 +360,8 @@
         //Define o valor e o texto da nova opção
         if(type === "Parcelado"){
 
-            newOption2.value = "À Vista";
-            newOption2.textContent = "À Vista";
+            newOption2.value = "À vista";
+            newOption2.textContent = "À vista";
 
             newOption3.value = "";
             newOption3.textContent = "Selecione...";
@@ -394,8 +394,8 @@
 
         }else{
             
-            newOption2.value = "À Vista";
-            newOption2.textContent = "À Vista";
+            newOption2.value = "À vista";
+            newOption2.textContent = "À vista";
 
             newOption3.value = "Parcelado";
             newOption3.textContent = "Parcelado";
@@ -427,17 +427,20 @@
         const inputInstallmentData = document.getElementById('date_number_installment');
         
         if (inputData) {
-            // Se o valor selecionado pelo usuário for "À Vista", exibe o campo "Data de Pagamento"
-            if (this.value === "À Vista") {
-                inputInstallmentData.style.display = 'none';
+            //inputData.innerHTML = ''; // Limpa as opções antigas para não duplicar
+            // Se o valor selecionado pelo usuário for "À vista", exibe o campo "Data de Pagamento"
+            if (this.value === "À vista") {
+
                 inputData.style.display = 'block';
+                inputInstallmentData.style.display = 'none';
+                
             } else if(this.value === "Parcelado"){
                 // Se o valor selecionado pelo usuário for "Parcelado", exibe os campos "Data da Primeira Parcela", "Número de Parcelas", "Dia do Vencimento" e mostra o "Valor da Parcela".
                 inputData.style.display = 'none';
                 inputInstallmentData.style.display = 'block';
             }else{
                 // Se ele voltar para o "Selecione...", os campos somem novamente
-                //inputData.style.display = 'none';
+                inputData.style.display = 'none';
                 inputInstallmentData.style.display = 'none';
             }
         }
