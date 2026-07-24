@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\PaymentTerm;
 use App\Models\Section;
 use App\Models\Debt;
+use App\Models\DueDateDebt;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -89,7 +90,7 @@ class ItemController extends Controller
         
         //
         $sections = Section::where('user_id', $user->id)->get();
-        $debts = Debt::where('user_id', $user->id)->get();
+        $debts = Debt::where('user_id', $user->id)->with('duedatedebt')->get();
 
         // Preparar dados de transações para cada seção
         $sectionsWithTransactions = $sections->map(function ($section) {

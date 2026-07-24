@@ -252,7 +252,9 @@
             toggleDebtFields();
         });
 
-        
+        function formatCurrency(value) {
+                return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
         document.addEventListener('DOMContentLoaded', function() {
             const agreedValueInput = document.getElementById('debt_agreed_value');
             const installmentNumberInput = document.getElementById('debt_installment_number');
@@ -261,9 +263,7 @@
 
             if (!agreedValueInput || !installmentNumberInput || !installmentValueDisplay) return;
 
-            function formatCurrency(value) {
-                return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
+            
 
             function updateInstallmentValue() {
                 const agreedValue = parseFloat(agreedValueInput.value.replace(',', '.'));
@@ -293,6 +293,14 @@
         // Abrindo a Modal 
         const minhaModal = document.getElementById('minhaModal');
         minhaModal.addEventListener('show.bs.modal', function (event) {
+            // Função para resetar todos os campos do modal
+            // function resetModalFields() {
+            //     inputAgreed_value.value = ""; // Limpa o input do valor total
+            //     inputInstallment.value = "";  // Limpa o input das parcelas
+            //     //spanInstallment_amount.textContent = "R$ 0,00"; // Reseta o texto do resultado
+            // }
+            
+
         // Botão que acionou a modal
         const button = event.relatedTarget;
         
@@ -306,9 +314,26 @@
         const amount_to_pay = button.getAttribute('data-amount_to_pay');
         const type = button.getAttribute('data-type');
         const installment = button.getAttribute('data-installment');
-        const payment_date = button.getAttribute('data-payment_date');
+        //Captura e converte a string JSON de datas de volta para um Array/Objeto JavaScript
+        let payment_date = button.getAttribute('data-payment_date') || '';
+        let dates = [];
+
         const payment_day = button.getAttribute('data-payment_day');
+        try {
+            dates = JSON.parse(payment_date);
+        } catch (e) {
+            console.error("Erro ao converter JSON:", e);
+        }
         
+        // Garante que "dates" seja tratado como um Array do JavaScript
+        if (!Array.isArray(dates)) {
+            dates = dates ? [dates] : [];
+        }
+
+        // Extrai APENAS as strings de data de dentro da propriedade "RealDates" de cada objeto
+        // Isso cria um array limpo de strings, ex: ['2026-05-30', '2026-06-30']
+        let realDates = dates.map(dates => dates && dates.date ? dates.date : null).filter(Boolean);
+
         // Atualiza o conteúdo da modal
         // Seleciona o input dentro do formulário do modal
         const inputNome = minhaModal.querySelector('#modalNome');
@@ -317,11 +342,14 @@
         //const inputPayment_method = minhaModal.querySelector('#modalPayment_method');
         const inputAmount_paid = minhaModal.querySelector('#modalAmount_paid'); 
         const inputAmount_to_pay = minhaModal.querySelector('#modalAmount_to_pay');
-        // Seleciona o elemento <select> dentro do modal
-        const selectType = minhaModal.querySelector('#modalType');
-        const inputInstallment = minhaModal.querySelector('#modalInstallment');
+        const selectType = minhaModal.querySelector('#modalType'); // Seleciona o elemento <select> dentro do modal
+        const inputInstallment = minhaModal.querySelector('#modalInstallment'); // Número de Parcelas
         const inputPayment_date = minhaModal.querySelector('#modalPayment_date');
+        const inputFirst_installment_date = minhaModal.querySelector('#first_installment_date');
         const inputPayment_day = minhaModal.querySelector('#modalPayment_day');
+        
+        const spanInstallment_amount = minhaModal.querySelector('#modalInstallment_amount');
+        
         // --- LÓGICA DOS RADIOS/CHECKBOX DO ACORDO ---
         const inputCheckSim = minhaModal.querySelector('#agreed_yes');
         const inputCheckNao = minhaModal.querySelector('#agreed_no');
@@ -330,6 +358,10 @@
         inputNome.value = nome;
         inputInitial_debt_amount.value = initial_debt_amount;
         inputAgreed_value.value = agreed_value;
+        inputInstallment.value = "";  // Limpa o input do número de parcelas do acesso anterior.
+        inputFirst_installment_date.value = ""; // Limpa o input da data da primeira parcela do acesso anterior.
+        inputPayment_day.value = ""; // Limpa o input da data da primeira parcela do acesso anterior.
+        spanInstallment_amount.textContent = '-'; // Limpa o Valor da Parcela do acesso anterior.
 
         // Se houver valor acordado, marca 'Sim', senão marca 'Não'
         if (agreed_value !== null && agreed_value !== '' && agreed_value !== 'null') {
@@ -341,12 +373,12 @@
             document.getElementById('edit_agreement_fields').style.display ='none';
             if (inputCheckSim) inputCheckSim.checked = false;
         }
+
         //inputPayment_method.value = payment_method;
         //inputAmount_paid.value = amount_paid; 
         //inputAmount_to_pay.value = amount_to_pay;
-        //inputInstallment.value = installment;
-        //inputPayment_date.value = payment_date;
-        //inputPayment_day.value = payment_day;
+        inputPayment_date.value = realDates[0];
+        
 
         //Limpa opções dinâmicas anteriores (opcional, para não acumular se abrir o modal várias vezes)
 
@@ -359,6 +391,49 @@
 
         //Define o valor e o texto da nova opção
         if(type === "Parcelado"){
+
+            inputAgreed_value.value = agreed_value;
+            inputInstallment.value = realDates.length;
+            inputFirst_installment_date.value = realDates[0];
+
+            
+            const installment_amount = agreed_value / realDates.length;
+            if (isNaN(agreed_value) || agreed_value <= 0 || isNaN(realDates.length) || realDates.length < 1) {
+                spanInstallment_amount.textContent = '-';
+                return;
+            }
+            spanInstallment_amount.textContent = `R$ ${formatCurrency( installment_amount )}`;
+            
+
+            const partesData = realDates[1].split('-'); // Quebra a da ta Ex.:'2026-06-30' por hífen
+            if (partesData.length === 3) {
+                inputPayment_day.value = parseInt(partesData[2], 10); // Captura o dia '30'
+            }
+
+            // 1. Função para atualizar o cálculo e atualizar a tela
+            function updateInstallment() {
+            // Converte os valores dos inputs para números
+            const agreedValue = parseFloat(inputAgreed_value.value) || 0;
+            const totalInstallments = parseInt(inputInstallment.value) || 0;
+
+            // Evita divisão por zero ou campos vazios
+            if (totalInstallments <= 0 || agreedValue <= 0) {
+                spanInstallment_amount.textContent = '-';
+                return;
+            }
+
+            // Realiza o cálculo do valor da parcela
+            const update_installment_amount = agreedValue / totalInstallments;
+
+            // Formata e exibe no span (usando o método nativo)
+            spanInstallment_amount.textContent = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(update_installment_amount);
+            }
+
+            inputInstallment.addEventListener('input', updateInstallment);
+            inputAgreed_value.addEventListener('input', updateInstallment);
 
             newOption2.value = "À vista";
             newOption2.textContent = "À vista";
@@ -376,6 +451,8 @@
             selectType.appendChild(newOption3);
 
         }else if(type === "À vista"){
+
+            
 
             newOption2.value = "Parcelado";
             newOption2.textContent = "Parcelado";
@@ -421,6 +498,7 @@
 
     });
 
+    
     // MONITORA MUDANÇA (quando o usuário escolhe na tela) ---
     document.getElementById('modalType').addEventListener('change', function() {
         const inputData = document.getElementById('cash_payment_date');

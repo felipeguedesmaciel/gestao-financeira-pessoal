@@ -219,6 +219,16 @@
                         <td><strong>Valor a Pagar:</strong></td>
                         <td>R${{ number_format($debt->amount_to_pay ?? 0, 2, ',', '.') }}</td>
                     </tr>
+                    <tr>
+                        <td><strong>Data:</strong></td>
+                        @if($debt->duedatedebt === null )
+                        <td>Sem data</td>
+                        @else
+                          @foreach ($debt->duedatedebt as $date)
+                         <td>{{ $date->date }}</td>
+                         @endforeach
+                        @endif
+                    </tr>
                 </table>
             </div>
             <div class="debt-actions">
@@ -240,8 +250,7 @@
                     data-amount_paid="{{ $debt->amount_paid ?? 0 }}"
                     data-amount_to_pay="{{ $debt->amount_to_pay ?? 0 }}"
                     data-type="{{ $debt->payment_method ?? '' }}"
-                    data-installment="{{ optional($debt)->installment ?? '' }}"
-                    data-payment_date="{{ optional($debt)->payment_date ?? '' }}"
+                    data-payment_date='@json(optional($debt)->duedatedebt ?? [] )'
                     data-payment_day="{{ optional($debt)->payment_day ?? '' }}"
                     >
                     Editar
@@ -636,24 +645,24 @@
                                     <!-- Quando usuário selecionar qualquer Condição de Pagamento abre se "Data de Pagamento"-->
                                     <div id="cash_payment_date" style="display:none; margin-top:8px;">
                                         <label class="form-label" for="avista_payment_date">Data de Pagamento</label>
-                                        <input type="date" name="avista_payment_date" id="avista_payment_date" class="form-control">
+                                        <input type="date" name="avista_payment_date" id="modalPayment_date" class="form-control">
                                     </div>
                                     <div id="date_number_installment" style="display:none; margin-top:8px;">
                                         <label for="title">Número de Parcelas</label>
-                                        <input type="number" name="installment" id="debt_installment_number" min="1" class="form-control" placeholder="Número de parcelas" value="{{ old('installment') }}">
+                                        <input type="number" name="installment" id="modalInstallment" min="1" class="form-control" placeholder="Número de parcelas">
                                         <div class="col-md-6">
                                         <label class="form-label">Data da primeira Parcela</label>
                                         <!-- id adicionado e name alterado para não conflitar com o campo principal 'date' -->
-                                        <input type="date" name="payment_date" id="payment_date" value="{{ old('payment_date', old('date')) }}" class="form-control">
+                                        <input type="date" name="first_installment_date" id="first_installment_date" class="form-control">
                                             @error('date') <div class="text-danger small">{{ $message }}</div> @enderror
                                         </div>
                                         <div class="col-md-6" style="margin-top:8px;">
                                             <label class="form-label">Dia do vencimento das Parcelas</label>
-                                            <input type="number" name="payment_day" id="payment_day" style="max-width:180px" min="1" max="31" class="form-control" placeholder="{{ old('payment_day') ?? '' }}" value="{{ old('payment_day') }}">
+                                            <input type="number" name="payment_day" id="modalPayment_day" style="max-width:180px" min="1" max="31" class="form-control">
                                         </div>
-                                        <div class="col-md-6" style="margin-top:8px;">Valor da Parcela: <span id="debt_installment_value_display">-</span></div>
+                                        <div class="col-md-6" style="margin-top:8px;">Valor da Parcela: <span id="modalInstallment_amount"></span></div>
                                     </div>
-                                    @error('installment') 
+                                    @error('modalInstallment_amount') 
                                         <div class="text-danger small">{{ $message }}</div> 
                                     @enderror
                                 </div>
