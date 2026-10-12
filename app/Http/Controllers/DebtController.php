@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Debt;
 use App\Models\DueDateDebt;
+//Use App\Http\Controllers\DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -28,14 +30,14 @@ class DebtController extends Controller
             'name' => $request->name,
             'initial_debt_amount' => $request->initial_debt_amount,
             'agreed_value' => $agreed ?? null,
-            'payment_method' => $type ?: 'Desconhecido',
+            'payment_method' => $type ?: '',
             'amount_paid' => $amountPaid,
             'amount_to_pay' => $amountToPay ?? 0,
         ]);
 
         // Agora cria as datas de vencimento conforme a condição de pagamento
         if ($type === 'Parcelado') {
-            $installments = max(1, intval($request->installment));
+            $installments = max(1, intval($request->installment)); // numero de parcelas
             $baseDate = $request->payment_date ? Carbon::parse($request->payment_date) : Carbon::now();
             $paymentDay = $request->payment_day ? intval($request->payment_day) : intval($baseDate->day);
 
@@ -62,7 +64,7 @@ class DebtController extends Controller
             // à vista: value = valor acordado (se houver) ou initial_debt_amount
             $value = $agreed !== null ? $agreed : floatval($request->initial_debt_amount);
             $debt->value = $value;
-            $debt->save();
+            $debt->save(); 
 
             $date = $request->avista_payment_date ?? $request->payment_date ?? Carbon::now()->toDateString();
             DueDateDebt::create([
@@ -86,6 +88,7 @@ public function updateDebt(Request $request, $id)
 {
     $user = Auth::user();
     $debt = Debt::where('user_id', $user->id)->findOrFail($id);
+    //$due_data = DueDateDebt::where('id_debts', $debt->id)->findOrFail($id); //pegando as datas referente a divida.
 
     $validated = $request->validate([
         'name'                => 'required|string',
@@ -93,15 +96,77 @@ public function updateDebt(Request $request, $id)
         'agreed_value'        => 'nullable|numeric|min:0',
         'payment_method'      => 'nullable|string',
         'amount_paid'         => 'nullable|numeric|min:0',
+        'amount_to_pay'         => 'nullable|numeric|min:0',
+        'value'               => 'nullable|numeric|min:0',
+        'edit_agreed_value'   => 'nullable|numeric|min:0',
+        'installment'         => 'nullable|numeric|min:0',
+        'first_installment_date' => 'required|date',
+        'payment_day'         => 'nullable|numeric|min:0',
     ]);
+    
+    // Verifica se ouve acordo ou não
+    if($validated['edit_agreed_value'] == 0){
 
-    // Validando se o usuário não colocar nada no campo "Valor já pago".
-    $validated['amount_paid'] = $validated['amount_paid'] ?? 0;
+        $validated['amount_paid'] = 0;
+        $validated['amount_to_pay'] = 0;
+        $validated['agreed_value'] = null;
+        $validated['payment_method'] = '';
+        $validated['value'] = null;
 
-    $validated['amount_to_pay'] = 
-        ($validated['agreed_value'] ?? $validated['initial_debt_amount']) - $validated['amount_paid'];
+    }else{
+        
+        //Calculando e atribuindo o valor da parcela ou á vista.
+        $validated['value'] = $validated['agreed_value'] / $validated['installment'];
+
+        // Validando se o usuário não colocar nada no campo "Valor já pago".
+        $validated['amount_paid'] = $validated['amount_paid'] ?? 0;
+
+        $validated['amount_to_pay'] = ($validated['agreed_value'] ?? $validated['initial_debt_amount']) - $validated['amount_paid'];
+    }
 
     $debt->update($validated);
+
+
+    // Criando as Datas(se for parcelado ou apenas uma data se for á vista).
+    $numberInstallment = $validated['installment'] > 1 ? $validated['installment'] : $validated['installment'] = 1; // numero de parcelas
+    $inputDay = $validated['payment_day']; // dia enviado do formulário
+    $inputDate = $validated['first_installment_date'] ? Carbon::parse($validated['first_installment_date']) : Carbon::now(); // data enviada do formulário
+    $paymentDay = $inputDay ? intval($inputDay) : intval($inputDate->day);
+
+    $dueDate = [];
+
+    for ($i = 0; $i < $numberInstallment; $i++) {
+        if($i == 0){
+            $dueDate[] = [
+
+                'date' => $inputDate,
+                'status' => 'À pagar'
+            ];
+        }else{
+            $dt = $inputDate->copy()->addMonths($i);
+            $daysInMonth = $dt->daysInMonth;
+            $dayToUse = min(max(1, $paymentDay), $daysInMonth);
+            $dueDate[] = [
+
+                'date' => Carbon::create($dt->year, $dt->month, $dayToUse)->toDateString(),
+                'status' => 'À pagar'
+            ];
+        }
+    }
+    
+    // Usa uma Transaction para garantir a segurança dos dados
+    DB::transaction(function () use ($debt, $dueDate, $validated) {
+        // Remove TODAS as datas antigas associadas a este produto
+        $debt->duedatedebt()->delete();
+
+        // Se houverem novas parcelas no request, insere todas de uma vez
+        if (!empty($dueDate)) {
+            // O createMany insere múltiplos registros preenchendo o 'produto_id' automaticamente
+            $debt->duedatedebt()->createMany($dueDate);
+        }
+        
+    });
+
 
     return redirect('dashboard')->with('success', 'Dívida atualizada com sucesso!');
 }
