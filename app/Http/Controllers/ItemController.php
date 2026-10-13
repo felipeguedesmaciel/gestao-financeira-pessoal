@@ -37,8 +37,8 @@ class ItemController extends Controller
             ->distinct()
             ->orderBy('type')
             ->pluck('type');
-        // Saldo total
-        $saldo = $itens->sum('value');
+        // Saldo total (incluindo só o que foi pago inclusive Recebimentos)
+        $saldo = Item::where('status','Paid')->sum('value');
 
         // Saldo do mês atual
         $now = Carbon::now();
@@ -144,7 +144,7 @@ class ItemController extends Controller
                 $item->unit_id = $unit_id;
                 $item->category = $request->category;
                 $item->description = $request->description;
-                $item->value = $request->value;
+                $item->value = - $request->value; // Salvando o valor negativo no DB.
                 $item->payment_method = $request->payment_method;
                 $item->date = $request->date;
                 $item->payment_date = $installmentDate;
@@ -157,7 +157,7 @@ class ItemController extends Controller
 
             $paymentTerm = new PaymentTerm;
             $paymentTerm->installment = 1;
-            $paymentTerm->type = $request->type;
+            $paymentTerm->type = $request->type == false && $request->recebimento === "renda" ? "Á Vista" : $request->type;
             $paymentTerm->save();
 
             // Converte date para Carbon também
@@ -168,7 +168,7 @@ class ItemController extends Controller
             $item->unit_id = $unit_id;
             $item->category = $request->category;
             $item->description = $request->description;
-            $item->value = $request->value;
+            $item->value = $request->recebimento === "renda" ?  $request->value : - $request->value; // Salvando o valor positivo no DB se vier do formulário Recebimento.
             $item->payment_method = $request->payment_method;
             $item->date = $request->date;
             $item->payment_date = $itemDate;
