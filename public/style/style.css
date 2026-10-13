@@ -73,6 +73,14 @@ th, td{
     padding-top: 45px;
 }
 
+#saldoPositivo{
+    color: #0cd70e;
+}
+
+#saldoNegativo{
+    color: #e61111;
+}
+
 #card-category{
     text-align: center;
     color: white;
