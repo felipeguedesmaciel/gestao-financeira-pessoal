@@ -7,7 +7,13 @@
         <p style="color: white; padding-left:20px;">Olá, {{ $user->name }}.</p>
 @endif
     <section>
-        <h2>Saldo total: R${{ number_format($saldo, 2, ',', '.') }}</h2>
+        <h2>Saldo total: 
+            @if ($saldo <= 0)
+             <span id="saldoNegativo">
+                @else
+                <span id="saldoPositivo"> 
+            @endif
+            R$ {{ number_format($saldo, 2, ',', '.') }}</span></h2>
     </section>
     <section>
         <h2>Este Mês:</h2>
@@ -25,7 +31,7 @@
                                 <div class="card bg-main">
                                     <div id="card-category" class="card-body">
                                         <p>{{ $category }}</p>
-                                        <p>R$ {{ number_format($data->total, 2, ',', '.') }}</p>
+                                        <p>R$ {{ number_format(abs($data->total), 2, ',', '.') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +99,7 @@
                             <div class="card bg-main">
                                 <div id="card-category" class="card-body">
                                     <p>{{ $category }}</p>
-                                    <p>R$ {{ number_format($data->total, 2, ',', '.') }}</p>
+                                    <p>R$ {{ number_format(abs($data->total), 2, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +152,7 @@
                             <div class="card bg-main">
                                 <div id="card-category" class="card-body">
                                     <p>{{ $category }}</p>
-                                    <p>R$ {{ number_format($data->total, 2, ',', '.') }}</p>
+                                    <p>R$ {{ number_format(abs($data->total), 2, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -242,7 +248,7 @@
                     class="btn btn-edit" 
                     data-bs-toggle="modal" 
                     data-bs-target="#minhaModal" 
-                    data-id="{{ $debt->id }}" 
+                    data-bs-debt-id="{{ $debt->id }}" 
                     data-nome="{{ $debt->name }}"
                     data-initial_debt_amount="{{ $debt->initial_debt_amount }}"
                     data-agreed_value="{{ $debt->agreed_value }}"
@@ -427,6 +433,8 @@
                 <!-- campos opcionais -->
                 <input type="hidden" name="unit_id" value="{{ old('unit_id', 1) }}">
                 <input type="hidden" name="condition_id" value="{{ old('condition_id', 1) }}">
+                <input type="hidden" name="status" value="Paid">
+                <input type="hidden" name="recebimento" value="renda">
               </div>
             </div>
             <div class="modal-footer">
@@ -598,7 +606,7 @@
     <div class="modal fade" id="minhaModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form action="{{ route('debts.update', $debt->id) }}" method="POST">
+                <form id="formUpdateDebt" action="" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-header">
@@ -641,8 +649,8 @@
                                 <!-- Condição de pagamento -->
                                 <div class="col-md-6" style="margin-top:8px;">
                                     <label class="form-label" for="settlement_condition">Condição de pagamento</label>
-                                    <select class="form-select" id="modalType" name="meu_tipo"></select>
-                                    <!-- Quando usuário selecionar qualquer Condição de Pagamento abre se "Data de Pagamento"-->
+                                    <select class="form-select" id="modalType" name="payment_method"></select>
+                                    <!-- Quando usuário selecionar a Condição de Pagamento "Á vista" abre se "Data de Pagamento"-->
                                     <div id="cash_payment_date" style="display:none; margin-top:8px;">
                                         <label class="form-label" for="avista_payment_date">Data de Pagamento</label>
                                         <input type="date" name="avista_payment_date" id="modalPayment_date" class="form-control">
@@ -651,8 +659,8 @@
                                         <label for="title">Número de Parcelas</label>
                                         <input type="number" name="installment" id="modalInstallment" min="1" class="form-control" placeholder="Número de parcelas">
                                         <div class="col-md-6">
+                                        <!-- Quando usuário selecionar a Condição de Pagamento "Parecelado" abre se "Data da primeira Parcela"-->
                                         <label class="form-label">Data da primeira Parcela</label>
-                                        <!-- id adicionado e name alterado para não conflitar com o campo principal 'date' -->
                                         <input type="date" name="first_installment_date" id="first_installment_date" class="form-control">
                                             @error('date') <div class="text-danger small">{{ $message }}</div> @enderror
                                         </div>
@@ -671,7 +679,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary">Editar</button>
+                        <button type="submit" class="btn btn-primary">Atualizar</button>
                     </div>
                 </form>
             </div>
