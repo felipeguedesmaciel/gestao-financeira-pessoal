@@ -25,7 +25,7 @@
         @auth
         <ion-icon onclick="clickMenu()" id="burguer" name="reorder-three-sharp"></ion-icon>
         <h1>Gestão Financeira Pessoal</h1>
-        <p>Previsão: <button>on/off</button></p>
+        <!-- <p>Previsão: <button>on/off</button></p> -->
         <menu id="itens">
             <ion-icon onclick="clickMenu()" name="close" id="close"></ion-icon>
             <ul>
@@ -292,6 +292,8 @@
         //### Modal Editar Divida ###
         // Abrindo a Modal 
         const minhaModal = document.getElementById('minhaModal');
+        const myForm = document.getElementById('formUpdateDebt');
+
         minhaModal.addEventListener('show.bs.modal', function (event) {
             // Função para resetar todos os campos do modal
             // function resetModalFields() {
@@ -304,8 +306,10 @@
         // Botão que acionou a modal
         const button = event.relatedTarget;
         
+        // Extrai o ID do atributo data-bs-debt-id
+        const debtId = button.getAttribute('data-bs-debt-id');
+
         // Extrai os atributos data-*
-        const id = button.getAttribute('data-id');
         const nome = button.getAttribute('data-nome');
         const initial_debt_amount = button.getAttribute('data-initial_debt_amount');
         const agreed_value = button.getAttribute('data-agreed_value');
@@ -344,11 +348,11 @@
         const inputAmount_to_pay = minhaModal.querySelector('#modalAmount_to_pay');
         const selectType = minhaModal.querySelector('#modalType'); // Seleciona o elemento <select> dentro do modal
         const inputInstallment = minhaModal.querySelector('#modalInstallment'); // Número de Parcelas
-        const inputPayment_date = minhaModal.querySelector('#modalPayment_date');
+        const inputPayment_date = minhaModal.querySelector('#modalPayment_date'); //Data de Pagamento a vista
         const inputFirst_installment_date = minhaModal.querySelector('#first_installment_date');
         const inputPayment_day = minhaModal.querySelector('#modalPayment_day');
-        
-        const spanInstallment_amount = minhaModal.querySelector('#modalInstallment_amount');
+
+        const spanInstallment_amount = minhaModal.querySelector('#modalInstallment_amount'); // valor da parcela
         
         // --- LÓGICA DOS RADIOS/CHECKBOX DO ACORDO ---
         const inputCheckSim = minhaModal.querySelector('#agreed_yes');
@@ -362,6 +366,11 @@
         inputFirst_installment_date.value = ""; // Limpa o input da data da primeira parcela do acesso anterior.
         inputPayment_day.value = ""; // Limpa o input da data da primeira parcela do acesso anterior.
         spanInstallment_amount.textContent = '-'; // Limpa o Valor da Parcela do acesso anterior.
+        myForm.action = ""; // Reseta o action por segurança
+
+        // Monta a URL final substituindo o ID dinamicamente
+        // Ajuste o caminho '/debts/' de acordo com a sua URL real do Laravel
+        myForm.action = `/debts/${debtId}`;
 
         // Se houver valor acordado, marca 'Sim', senão marca 'Não'
         if (agreed_value !== null && agreed_value !== '' && agreed_value !== 'null') {
@@ -393,8 +402,8 @@
         if(type === "Parcelado"){
 
             inputAgreed_value.value = agreed_value;
-            inputInstallment.value = realDates.length;
-            inputFirst_installment_date.value = realDates[0];
+            inputInstallment.value = realDates.length; // conta quantas datas existem para saber o numero de parcelas.
+            inputFirst_installment_date.value = realDates[0]; // pega a primeira data
 
             
             const installment_amount = agreed_value / realDates.length;
@@ -405,9 +414,9 @@
             spanInstallment_amount.textContent = `R$ ${formatCurrency( installment_amount )}`;
             
 
-            const partesData = realDates[1].split('-'); // Quebra a da ta Ex.:'2026-06-30' por hífen
+            const partesData = (realDates[1]) ? realDates[1].split('-') : realDates[0].split('-'); // Quebra a data Ex.:'2026-06-30' por hífen
             if (partesData.length === 3) {
-                inputPayment_day.value = parseInt(partesData[2], 10); // Captura o dia '30'
+                inputPayment_day.value = parseInt(partesData[2], 10); // Ex.:Captura o dia '30'
             }
 
             // 1. Função para atualizar o cálculo e atualizar a tela
