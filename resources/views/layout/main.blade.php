@@ -545,7 +545,30 @@
         });
     });
 
-        
+    // Seleciona todos os parágrafos dentro da lista de dashboard
+    const valores = document.querySelectorAll('.list-dasboard li p');
+
+    valores.forEach(p => {
+        // Remove os pontos e substitui a vírgula por ponto para o JavaScript ler como número,
+        // limpando também o "R$" e espaços.
+        const textoLimpo = p.textContent
+            .replace('R$', '')
+            .replace(/\./g, '')
+            .replace(',', '.')
+            .trim();
+
+        const valorNumerico = parseFloat(textoLimpo);
+
+        // Aplica a cor com base no valor numérico
+        if (valorNumerico > 0) {
+            p.style.color = '#0cd70e'; // Verde para positivo
+        } else if (valorNumerico < 0) {
+            p.style.color = '#e61111'; // Vermelho para negativo
+        } else {
+            p.style.color = '#2c3e50'; // Cor neutra (ex: cinza escuro) se for exatamente zero
+        }
+    });
+
     </script>
 </body>
 </html>

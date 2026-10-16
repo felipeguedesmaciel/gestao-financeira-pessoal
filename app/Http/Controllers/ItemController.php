@@ -42,6 +42,16 @@ class ItemController extends Controller
 
         // Saldo do mês atual
         $now = Carbon::now();
+        $entradaM = Item::where('user_id', $user->id)
+            ->where('value', '>',0 )
+            ->whereMonth('payment_date', $now->month)
+            ->whereYear('payment_date', $now->year)
+            ->sum('value');
+        $saidaM = Item::where('user_id', $user->id)
+            ->where('value', '<=',0 )
+            ->whereMonth('payment_date', $now->month)
+            ->whereYear('payment_date', $now->year)
+            ->sum('value');
         $saldoM = Item::where('user_id', $user->id)
             ->whereMonth('payment_date', $now->month)
             ->whereYear('payment_date', $now->year)
@@ -59,6 +69,22 @@ class ItemController extends Controller
 
         // próximo mês (adiciona 1 mês ao agora)
         $next = Carbon::now()->addMonth();
+        
+        // Saldo do próximo mês  
+        $entradaPM = Item::where('user_id', $user->id)
+            ->where('value', '>',0 )
+            ->whereMonth('payment_date', $next->month)
+            ->whereYear('payment_date', $next->year)
+            ->sum('value');
+        $saidaPM = Item::where('user_id', $user->id)
+            ->where('value', '<=',0 )
+            ->whereMonth('payment_date', $next->month)
+            ->whereYear('payment_date', $next->year)
+            ->sum('value');
+        $saldoPM = Item::where('user_id', $user->id)
+            ->whereMonth('payment_date', $next->month)
+            ->whereYear('payment_date', $next->year)
+            ->sum('value');
 
         $nextCategoryTotals = Item::where('user_id', $user->id)
             ->whereMonth('payment_date', $next->month)
@@ -102,7 +128,7 @@ class ItemController extends Controller
             ];
         });
 
-        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments', 'nextCategoryTotals', 'yearCategoryTotals','selectedYear', 'sections', 'sectionsWithTransactions', 'debts'));
+        return view('dashboard', compact('user', 'itens', 'saldo', 'saldoM', 'entradaM', 'saidaM', 'saldoPM', 'entradaPM', 'saidaPM', 'now', 'categories', 'type', 'categoryTotals', 'upcomingPayments', 'nextCategoryTotals', 'yearCategoryTotals','selectedYear', 'sections', 'sectionsWithTransactions', 'debts'));
 
     }
 

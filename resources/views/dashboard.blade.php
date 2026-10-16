@@ -18,8 +18,8 @@
     <section>
         <h2>Este Mês:</h2>
         <ul class="list-dasboard">
-            <li>Entradas <p>R$0.00</p></li>
-            <li>Saídas <p>R$0.00</p></li>
+            <li>Entradas <p>{{ number_format($entradaM, 2, ',', '.') }}</p></li>
+            <li>Saídas <p>{{ number_format($saidaM, 2, ',', '.') }}</p></li>
             <li>Saldo <p>{{ number_format($saldoM, 2, ',', '.') }}</p></li>
         </ul>
         <div>
@@ -77,7 +77,7 @@
                 </tbody>
             </table>
                 <div class="btn-list-sv">
-                    <a href="#" class="btn btn-outline-primary">Editar direto na lista <img src="img/write.png" alt=""></a>
+                    <!-- <a href="#" class="btn btn-outline-primary">Editar direto na lista <img src="img/write.png" alt=""></a> -->
                     <button class="btn btn-primary btn-line" type="submit"><span>Salvar</span><ion-icon id="icon-btn" class="ms-2" name="checkbox"></ion-icon></button>
                 </div>
             </form>
@@ -86,9 +86,9 @@
     <section>
         <h2>Próximo Mês:</h2>
         <ul class="list-dasboard">
-            <li>Entradas <p>R$0.00</p></li>
-            <li>Saídas <p>R$0.00</p></li>
-            <li>Saldo <p>R$0.00</p></li>
+            <li>Entradas <p>{{ number_format($entradaPM, 2, ',', '.') }}</p></li>
+            <li>Saídas <p>{{ number_format($saidaPM, 2, ',', '.') }}</p></li>
+            <li>Saldo <p>{{ number_format($saldoPM, 2, ',', '.') }}</p></li>
         </ul>
         <div>
             <h3>Categorias Inseridas</h3>
@@ -502,7 +502,6 @@
                 <input type="number" step="0.01" name="target_value" class="form-control" placeholder="Ex: 5000.00">
                 </div>
             </div>
-            </div>
             <div class="col-md-6" style="margin-top:8px;">
                 <label class="form-label">Método de Pagamento</label>
                 <input type="text" name="payment_method" id="edit_payment_method" class="form-control" value="">
@@ -510,6 +509,7 @@
             <div class="col-md-6" style="margin-top:8px;">
                 <label class="form-label">Valor já pago</label>
                 <input type="number" step="0.01" name="amount_paid" id="edit_amount_paid" class="form-control" value="0">
+            </div>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
